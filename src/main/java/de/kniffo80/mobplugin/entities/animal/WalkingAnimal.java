@@ -1,19 +1,29 @@
 package de.kniffo80.mobplugin.entities.animal;
 
 import cn.nukkit.Player;
+import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.data.ShortEntityData;
 import cn.nukkit.event.entity.EntityDamageEvent;
+import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
+import cn.nukkit.level.particle.HeartParticle;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.network.protocol.EntityEventPacket;
 import cn.nukkit.potion.Effect;
-import cn.nukkit.timings.Timings;
+import co.aikar.timings.Timings;
 import de.kniffo80.mobplugin.entities.WalkingEntity;
+import de.kniffo80.mobplugin.route.WalkerRouteFinder;
+import de.kniffo80.mobplugin.utils.Utils;
 
 public abstract class WalkingAnimal extends WalkingEntity implements Animal {
 
+    protected int inLoveTicks = 0;
+    protected int spawnBabyDelay = 0; //TODO: spawn baby animal
+
     public WalkingAnimal(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
+        this.route = null;
     }
 
     @Override
@@ -25,11 +35,15 @@ public abstract class WalkingAnimal extends WalkingEntity implements Animal {
     protected void initEntity() {
         super.initEntity();
 
+        if (this.getDataFlag(DATA_FLAG_BABY, 0)) {
+            this.setDataFlag(DATA_FLAG_BABY, DATA_TYPE_BYTE);
+        }
+
     }
 
     @Override
     public boolean isBaby() {
-        return false;
+        return this.getDataFlag(DATA_FLAG_BABY, 0);
     }
 
     @Override
@@ -39,12 +53,25 @@ public abstract class WalkingAnimal extends WalkingEntity implements Animal {
 
         hasUpdate = super.entityBaseTick(tickDiff);
 
+        if(this.isInLove()) {
+            this.inLoveTicks -= tickDiff;
+            if (this.age % 20 == 0) {
+                for (int i = 0; i < 3; i++) {
+                    this.level.addParticle(new HeartParticle(this.add(Utils.rand(-1.0,1.0),this.getMountedYOffset()+ Utils.rand(-1.0,1.0),Utils.rand(-1.0,1.0))));
+                }
+                /*EntityEventPacket pk = new EntityEventPacket();
+                pk.eid = this.getId();
+                pk.event = 21;
+                this.getLevel().addChunkPacket(this.getChunkX() >> 4,this.getChunkZ() >> 4,pk);*/
+            }
+        }
+
         if (!this.hasEffect(Effect.WATER_BREATHING) && this.isInsideOfWater()) {
             hasUpdate = true;
             int airTicks = this.getDataPropertyShort(DATA_AIR) - tickDiff;
             if (airTicks <= -20) {
                 airTicks = 0;
-                this.attack(new EntityDamageEvent(this, EntityDamageEvent.CAUSE_DROWNING, 2));
+                this.attack(new EntityDamageEvent(this, EntityDamageEvent.DamageCause.DROWNING, 2));
             }
             this.setDataProperty(new ShortEntityData(DATA_AIR, airTicks));
         } else {
@@ -60,7 +87,6 @@ public abstract class WalkingAnimal extends WalkingEntity implements Animal {
         if (this.closed) {
             return false;
         }
-
         if (!this.isAlive()) {
             if (++this.deadTicks >= 23) {
                 this.close();
@@ -85,6 +111,25 @@ public abstract class WalkingAnimal extends WalkingEntity implements Animal {
             this.moveTime = 0;
         }
         return true;
+    }
+
+    public boolean onInteract(Entity entity, Item item) {
+        //TODO: mating
+
+        return false;
+    }
+
+    public void setInLove() {
+        this.inLoveTicks = 600;
+        this.setDataFlag(DATA_FLAGS, DATA_FLAG_INLOVE);
+    }
+
+    public boolean isInLove(){
+        return inLoveTicks > 0;
+    }
+
+    public boolean isBreedingItem(Item item) {
+        return item != null && item.getId() == Item.WHEAT;
     }
 
 }

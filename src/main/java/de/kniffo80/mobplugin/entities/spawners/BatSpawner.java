@@ -1,8 +1,3 @@
-/**
- * CreeperSpawner.java
- * 
- * Created on 10:39:49
- */
 package de.kniffo80.mobplugin.entities.spawners;
 
 import cn.nukkit.IPlayer;
@@ -11,14 +6,13 @@ import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.utils.Config;
 import de.kniffo80.mobplugin.AutoSpawnTask;
-import de.kniffo80.mobplugin.FileLogger;
 import de.kniffo80.mobplugin.entities.animal.flying.Bat;
 import de.kniffo80.mobplugin.entities.autospawn.AbstractEntitySpawner;
 import de.kniffo80.mobplugin.entities.autospawn.SpawnResult;
 
 /**
  * Each entity get it's own spawner class.
- * 
+ *
  * @author <a href="mailto:kniffman@googlemail.com">Michael Gertz</a>
  */
 public class BatSpawner extends AbstractEntitySpawner {
@@ -46,11 +40,9 @@ public class BatSpawner extends AbstractEntitySpawner {
             this.spawnTask.createEntity(getEntityName(), pos.add(0, 1.3, 0));
         }
 
-        FileLogger.info(String.format("[%s] spawn for %s at %s,%s,%s with lightlevel %s and blockId %s, result: %s", getLogprefix(), iPlayer.getName(), pos.x, pos.y, pos.z, blockLightLevel, blockId, result));
-
         return result;
     }
-    
+
     /* (@Override)
      * @see cn.nukkit.entity.ai.IEntitySpawner#getEntityNetworkId()
      */

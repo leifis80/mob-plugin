@@ -1,8 +1,5 @@
 package de.kniffo80.mobplugin.entities.monster.flying;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockFence;
 import cn.nukkit.block.BlockFenceGate;
@@ -13,8 +10,9 @@ import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.ProjectileLaunchEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Location;
+import cn.nukkit.level.Sound;
 import cn.nukkit.level.format.FullChunk;
-import cn.nukkit.level.sound.LaunchSound;
+import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.NukkitMath;
 import cn.nukkit.math.Vector2;
 import cn.nukkit.math.Vector3;
@@ -24,7 +22,10 @@ import de.kniffo80.mobplugin.entities.BaseEntity;
 import de.kniffo80.mobplugin.entities.animal.Animal;
 import de.kniffo80.mobplugin.entities.monster.FlyingMonster;
 import de.kniffo80.mobplugin.entities.projectile.EntityFireBall;
-import de.kniffo80.mobplugin.entities.utils.Utils;
+import de.kniffo80.mobplugin.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Blaze extends FlyingMonster {
 
@@ -41,7 +42,7 @@ public class Blaze extends FlyingMonster {
 
     @Override
     public float getWidth() {
-        return 0.72f;
+        return 0.6f;
     }
 
     @Override
@@ -58,7 +59,7 @@ public class Blaze extends FlyingMonster {
         super.initEntity();
 
         this.fireProof = true;
-        this.setDamage(new int[] { 0, 0, 0, 0 });
+        this.setDamage(new int[]{0, 0, 0, 0});
     }
 
     protected void checkTarget() {
@@ -135,14 +136,13 @@ public class Blaze extends FlyingMonster {
             return false;
         }
 
-        int[] sides = { Block.SIDE_SOUTH, Block.SIDE_WEST, Block.SIDE_NORTH, Block.SIDE_EAST };
         Block that = this.getLevel().getBlock(new Vector3(NukkitMath.floorDouble(this.x + dx), (int) this.y, NukkitMath.floorDouble(this.z + dz)));
         if (this.getDirection() == null) {
             return false;
         }
 
-        Block block = that.getSide(sides[this.getDirection()]);
-        if (!block.canPassThrough() && block.getSide(Block.SIDE_UP).canPassThrough() && that.getSide(Block.SIDE_UP, 2).canPassThrough()) {
+        Block block = that.getSide(this.getDirection());
+        if (!block.canPassThrough() && block.getSide(BlockFace.UP).canPassThrough() && that.getSide(BlockFace.UP, 2).canPassThrough()) {
             if (block instanceof BlockFence || block instanceof BlockFenceGate) {
                 this.motionY = this.getGravity();
             } else if (this.motionY <= this.getGravity() * 4) {
@@ -269,7 +269,7 @@ public class Blaze extends FlyingMonster {
                 fireball.kill();
             } else {
                 fireball.spawnToAll();
-                this.level.addSound(new LaunchSound(this), this.getViewers().values());
+                this.level.addSound(this, Sound.MOB_BLAZE_SHOOT);
             }
         }
     }
@@ -280,18 +280,18 @@ public class Blaze extends FlyingMonster {
         if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
             int blazeRod = Utils.rand(0, 2); // drops 0-1 blaze rod
             int glowStoneDust = Utils.rand(0, 3); // drops 0-2 glowstone dust
-            for (int i=0; i < blazeRod; i++) {
+            for (int i = 0; i < blazeRod; i++) {
                 drops.add(Item.get(Item.BLAZE_ROD, 0, 1));
             }
-            for (int i=0; i < glowStoneDust; i++) {
+            for (int i = 0; i < glowStoneDust; i++) {
                 drops.add(Item.get(Item.GLOWSTONE_DUST, 0, 1));
             }
         }
         return drops.toArray(new Item[drops.size()]);
     }
-    
+
     @Override
-    public int getKillExperience () {
+    public int getKillExperience() {
         return 10; // gain 10 experience
     }
 

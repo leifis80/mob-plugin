@@ -1,24 +1,17 @@
-/**
- * AbstractEntitySpawner.java
- * 
- * Created on 10:40:29
- */
 package de.kniffo80.mobplugin.entities.autospawn;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-
 import cn.nukkit.IPlayer;
-import cn.nukkit.OfflinePlayer;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.utils.Config;
 import de.kniffo80.mobplugin.AutoSpawnTask;
-import de.kniffo80.mobplugin.FileLogger;
-import de.kniffo80.mobplugin.entities.utils.Utils;
+import de.kniffo80.mobplugin.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * @author <a href="mailto:kniffman@googlemail.com">Michael Gertz</a>
@@ -40,7 +33,6 @@ public abstract class AbstractEntitySpawner implements IEntitySpawner {
             while (tokenizer.hasMoreTokens()) {
                 disabledSpawnWorlds.add(tokenizer.nextToken());
             }
-            FileLogger.debug(String.format("[%s] Disabled spawn for the following worlds: %s", getLogprefix(), disabledSpawnWorlds));
         }
     }
 
@@ -49,8 +41,7 @@ public abstract class AbstractEntitySpawner implements IEntitySpawner {
      * @see cn.nukkit.entity.ai.IEntitySpawner#spawn(java.util.List, java.util.List)
      */
     @Override
-    public void spawn(List<Player> onlinePlayers, List<OfflinePlayer> offlinePlayers) {
-        // first spawn everything for online players ...
+    public void spawn(List<Player> onlinePlayers) {
         if (isSpawnAllowedByDifficulty()) {
             SpawnResult lastSpawnResult = null;
             for (Player player : onlinePlayers) {
@@ -61,19 +52,11 @@ public abstract class AbstractEntitySpawner implements IEntitySpawner {
                     }
                 }
             }
-            if (lastSpawnResult == null || !lastSpawnResult.equals(SpawnResult.MAX_SPAWN_REACHED)) {
-                for (OfflinePlayer player : offlinePlayers) {
-                    lastSpawnResult = spawn(player);
-                    // stop spawning because max spawn is reached!
-                    break;
-                }
-            }
         } else {
-            FileLogger.debug(String.format("[%s] Spawn not allowed because of difficulty [entityName:%s]", getLogprefix(), getEntityName()));
         }
 
     }
-    
+
     /**
      * Checks if the given level's name is on blacklist for auto spawn
      * @param level the level to be checked
@@ -121,7 +104,7 @@ public abstract class AbstractEntitySpawner implements IEntitySpawner {
 
     /**
      * A simple method that evaluates based on the difficulty set in server if a spawn is allowed or not
-     * 
+     *
      * @return
      */
     protected boolean isSpawnAllowedByDifficulty() {
@@ -144,13 +127,13 @@ public abstract class AbstractEntitySpawner implements IEntitySpawner {
 
     /**
      * Returns currently set difficulty as en {@link Enum}
-     * 
+     *
      * @return a {@link Difficulty} instance
      */
     protected Difficulty getCurrentDifficulty() {
         return Difficulty.getByDiffculty(this.server.getDifficulty());
     }
-    
+
     protected abstract String getLogprefix ();
 
 }

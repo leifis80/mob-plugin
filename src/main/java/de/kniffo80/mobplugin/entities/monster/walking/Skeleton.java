@@ -1,8 +1,5 @@
 package de.kniffo80.mobplugin.entities.monster.walking;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.projectile.EntityArrow;
@@ -14,14 +11,17 @@ import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBow;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Location;
+import cn.nukkit.level.Sound;
 import cn.nukkit.level.format.FullChunk;
-import cn.nukkit.level.sound.LaunchSound;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.MobEquipmentPacket;
 import de.kniffo80.mobplugin.MobPlugin;
 import de.kniffo80.mobplugin.entities.monster.WalkingMonster;
-import de.kniffo80.mobplugin.entities.utils.Utils;
+import de.kniffo80.mobplugin.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Skeleton extends WalkingMonster {
 
@@ -30,13 +30,13 @@ public class Skeleton extends WalkingMonster {
     public Skeleton(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
     }
-    
+
     @Override
     public void initEntity() {
         super.initEntity();
 
         this.setMaxHealth(20);
-    }    
+    }
 
     @Override
     public int getNetworkId() {
@@ -45,12 +45,12 @@ public class Skeleton extends WalkingMonster {
 
     @Override
     public float getWidth() {
-        return 0.65f;
+        return 0.6f;
     }
 
     @Override
     public float getHeight() {
-        return 1.8f;
+        return 1.99f;
     }
 
     public void attackEntity(Entity player) {
@@ -84,7 +84,7 @@ public class Skeleton extends WalkingMonster {
                     projectile.kill();
                 } else {
                     projectile.spawnToAll();
-                    this.level.addSound(new LaunchSound(this), this.getViewers().values());
+                    this.level.addSound(this, Sound.RANDOM_BOW);
                 }
             }
         }
@@ -97,8 +97,7 @@ public class Skeleton extends WalkingMonster {
         MobEquipmentPacket pk = new MobEquipmentPacket();
         pk.eid = this.getId();
         pk.item = new ItemBow();
-        pk.slot = 10;
-        pk.selectedSlot = 10;
+        pk.hotbarSlot = 0;
         player.dataPacket(pk);
     }
 
@@ -110,7 +109,7 @@ public class Skeleton extends WalkingMonster {
         hasUpdate = super.entityBaseTick(tickDiff);
 
         int time = this.getLevel().getTime() % Level.TIME_FULL;
-        if (!this.isOnFire() && !this.level.isRaining() && (time < Level.TIME_NIGHT || time > Level.TIME_SUNRISE)) {
+        if (!this.isOnFire() && !this.level.isRaining() && (time < 12567 || time > 23450)) {
             this.setOnFire(100);
         }
 
@@ -124,18 +123,18 @@ public class Skeleton extends WalkingMonster {
         if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
             int bones = Utils.rand(0, 3); // drops 0-2 bones
             int arrows = Utils.rand(0, 3); // drops 0-2 arrows
-            for (int i=0; i < bones; i++) {
+            for (int i = 0; i < bones; i++) {
                 drops.add(Item.get(Item.BONE, 0, 1));
             }
-            for (int i=0; i < arrows; i++) {
+            for (int i = 0; i < arrows; i++) {
                 drops.add(Item.get(Item.ARROW, 0, 1));
             }
         }
         return drops.toArray(new Item[drops.size()]);
     }
-    
+
     @Override
-    public int getKillExperience () {
+    public int getKillExperience() {
         return 5; // gain 5 experience
     }
 

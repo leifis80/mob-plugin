@@ -1,8 +1,5 @@
 package de.kniffo80.mobplugin.entities.monster.walking;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
@@ -13,13 +10,16 @@ import cn.nukkit.event.entity.EntityShootBowEvent;
 import cn.nukkit.event.entity.ProjectileLaunchEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Location;
+import cn.nukkit.level.Sound;
 import cn.nukkit.level.format.FullChunk;
-import cn.nukkit.level.sound.LaunchSound;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import de.kniffo80.mobplugin.MobPlugin;
 import de.kniffo80.mobplugin.entities.monster.WalkingMonster;
-import de.kniffo80.mobplugin.entities.utils.Utils;
+import de.kniffo80.mobplugin.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SnowGolem extends WalkingMonster {
 
@@ -37,12 +37,12 @@ public class SnowGolem extends WalkingMonster {
 
     @Override
     public float getWidth() {
-        return 0.6f;
+        return 0.7f;
     }
 
     @Override
     public float getHeight() {
-        return 1.8f;
+        return 1.9f;
     }
 
     @Override
@@ -92,7 +92,7 @@ public class SnowGolem extends WalkingMonster {
                     projectile.kill();
                 } else {
                     projectile.spawnToAll();
-                    this.level.addSound(new LaunchSound(this), this.getViewers().values());
+                    this.level.addSound(this, Sound.MOB_SNOWGOLEM_SHOOT);
                 }
             }
         }
@@ -103,16 +103,16 @@ public class SnowGolem extends WalkingMonster {
         List<Item> drops = new ArrayList<>();
         if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
             int snowBall = Utils.rand(0, 16); // drops 0-15 snowballs
-            for (int i=0; i < snowBall; i++) {
+            for (int i = 0; i < snowBall; i++) {
                 drops.add(Item.get(Item.SNOWBALL, 0, 1));
             }
         }
         return drops.toArray(new Item[drops.size()]);
     }
-    
+
     @Override
-    public int getKillExperience () {
-        return 0; // gain 0 experience
+    public int getKillExperience() {
+        return 0;
     }
 
 }

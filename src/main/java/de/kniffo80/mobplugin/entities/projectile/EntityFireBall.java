@@ -1,6 +1,8 @@
 package de.kniffo80.mobplugin.entities.projectile;
 
 import cn.nukkit.Player;
+import cn.nukkit.block.Block;
+import cn.nukkit.block.BlockCobblestone;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.projectile.EntityProjectile;
 import cn.nukkit.event.entity.ExplosionPrimeEvent;
@@ -9,15 +11,17 @@ import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.level.particle.CriticalParticle;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.AddEntityPacket;
-import de.kniffo80.mobplugin.entities.utils.Utils;
+import de.kniffo80.mobplugin.utils.Utils;
+
+import java.util.List;
 
 public class EntityFireBall extends EntityProjectile {
 
     public static final int NETWORK_ID = 85;
 
-    protected boolean       critical   = false;
+    protected boolean critical = false;
 
-    protected boolean       canExplode = false;
+    protected boolean canExplode = false;
 
     @Override
     public int getNetworkId() {
@@ -73,7 +77,6 @@ public class EntityFireBall extends EntityProjectile {
         }
 
         // this.timings.startTiming();
-
         boolean hasUpdate = super.onUpdate(currentTick);
 
         if (!this.hadCollision && this.critical) {
@@ -89,6 +92,9 @@ public class EntityFireBall extends EntityProjectile {
                 this.server.getPluginManager().callEvent(ev);
                 if (!ev.isCancelled()) {
                     Explosion explosion = new Explosion(this, (float) ev.getForce(), this.shootingEntity);
+                    if (this.shootingEntity.getLevelBlock() instanceof BlockCobblestone) {
+                        return false;
+                    }
                     if (ev.isBlockBreaking()) {
                         explosion.explodeA();
                     }

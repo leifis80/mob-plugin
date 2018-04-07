@@ -1,9 +1,5 @@
 package de.kniffo80.mobplugin.entities.monster.walking;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockLiquid;
@@ -12,13 +8,19 @@ import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.item.Item;
+import cn.nukkit.level.Level;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.math.NukkitMath;
 import cn.nukkit.math.Vector2;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
+import de.kniffo80.mobplugin.MobPlugin;
 import de.kniffo80.mobplugin.entities.monster.WalkingMonster;
-import de.kniffo80.mobplugin.entities.utils.Utils;
+import de.kniffo80.mobplugin.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class Spider extends WalkingMonster {
 
@@ -35,12 +37,12 @@ public class Spider extends WalkingMonster {
 
     @Override
     public float getWidth() {
-        return 1.3f;
+        return 1.4f;
     }
 
     @Override
     public float getHeight() {
-        return 1.12f;
+        return 0.9f;
     }
 
     @Override
@@ -177,9 +179,8 @@ public class Spider extends WalkingMonster {
             }
         }
 
-        int[] sides = { Block.SIDE_SOUTH, Block.SIDE_WEST, Block.SIDE_NORTH, Block.SIDE_EAST };
         Block block = this.getLevel().getBlock(new Vector3(NukkitMath.floorDouble(this.x + dx), (int) this.y, NukkitMath.floorDouble(this.z + dz)));
-        Block directionBlock = block.getSide(sides[this.getDirection()]);
+        Block directionBlock = block.getSide(this.getDirection());
         if (!directionBlock.canPassThrough()) {
             this.motionY = this.getGravity() * 3;
             return true;
@@ -194,10 +195,12 @@ public class Spider extends WalkingMonster {
 
     @Override
     public void attackEntity(Entity player) {
+        int time = player.getLevel().getTime() % Level.TIME_FULL;
         if (!this.isFriendly() || !(player instanceof Player)) {
+            if (time > 13184 && time < 22800) { //TODO: better fix
             this.attackDelay = 0;
-            HashMap<Integer, Float> damage = new HashMap<>();
-            damage.put(EntityDamageEvent.MODIFIER_BASE, (float) this.getDamage());
+            HashMap<EntityDamageEvent.DamageModifier, Float> damage = new HashMap<>();
+            damage.put(EntityDamageEvent.DamageModifier.BASE, (float) this.getDamage());
 
             if (player instanceof Player) {
                 @SuppressWarnings("serial")
@@ -231,10 +234,11 @@ public class Spider extends WalkingMonster {
                 for (Item i : ((Player) player).getInventory().getArmorContents()) {
                     points += armorValues.getOrDefault(i.getId(), 0f);
                 }
-                damage.put(EntityDamageEvent.MODIFIER_ARMOR,
-                        (float) (damage.getOrDefault(EntityDamageEvent.MODIFIER_ARMOR, 0f) - Math.floor(damage.getOrDefault(EntityDamageEvent.MODIFIER_BASE, 1f) * points * 0.04)));
+                damage.put(EntityDamageEvent.DamageModifier.ARMOR,
+                        (float) (damage.getOrDefault(EntityDamageEvent.DamageModifier.ARMOR, 0f) - Math.floor(damage.getOrDefault(EntityDamageEvent.DamageModifier.BASE, 1f) * points * 0.04)));
             }
-            player.attack(new EntityDamageByEntityEvent(this, player, EntityDamageEvent.CAUSE_ENTITY_ATTACK, damage));
+            player.attack(new EntityDamageByEntityEvent(this, player, EntityDamageEvent.DamageCause.ENTITY_ATTACK, damage));
+            }
         }
     }
 
@@ -253,7 +257,7 @@ public class Spider extends WalkingMonster {
         }
         return drops.toArray(new Item[drops.size()]);
     }
-    
+
     @Override
     public int getKillExperience () {
         return 5; // gain 5 experience

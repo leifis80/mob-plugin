@@ -1,16 +1,17 @@
 package de.kniffo80.mobplugin.entities.animal.walking;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cn.nukkit.Player;
+import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
 import de.kniffo80.mobplugin.entities.animal.WalkingAnimal;
-import de.kniffo80.mobplugin.entities.utils.Utils;
+import de.kniffo80.mobplugin.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Mooshroom extends WalkingAnimal {
 
@@ -27,12 +28,23 @@ public class Mooshroom extends WalkingAnimal {
 
     @Override
     public float getWidth() {
-        return 1.45f;
+        if (this.isBaby()) {
+            return 0.45f;
+        }
+        return 0.9f;
     }
 
     @Override
     public float getHeight() {
-        return 1.12f;
+        if (this.isBaby()) {
+            return 0.7f;
+        }
+        return 1.4f;
+    }
+
+    @Override
+    public boolean isBaby() {
+        return this.getDataFlag(DATA_FLAGS, Entity.DATA_FLAG_BABY);
     }
 
     public void initEntity() {
@@ -40,6 +52,7 @@ public class Mooshroom extends WalkingAnimal {
         this.setMaxHealth(10);
     }
 
+    @Override
     public boolean targetOption(EntityCreature creature, double distance) {
         if (creature instanceof Player) {
             Player player = (Player) creature;
@@ -53,10 +66,10 @@ public class Mooshroom extends WalkingAnimal {
         if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
             int leatherDrop = Utils.rand(0, 3); // drops 0-2 leather
             int beefDrop = Utils.rand(1, 4); // drops 1-3 raw beef / steak when on fire
-            for (int i=0; i < leatherDrop; i++) {
+            for (int i = 0; i < leatherDrop; i++) {
                 drops.add(Item.get(Item.LEATHER, 0, 1));
             }
-            for (int i=0; i < beefDrop; i++) {
+            for (int i = 0; i < beefDrop; i++) {
                 drops.add(Item.get(this.isOnFire() ? Item.STEAK : Item.RAW_BEEF, 0, 1));
             }
         }
@@ -64,7 +77,7 @@ public class Mooshroom extends WalkingAnimal {
     }
 
     @Override
-    public int getKillExperience () {
+    public int getKillExperience() {
         return Utils.rand(1, 4); // gain 1-3 experience
     }
 

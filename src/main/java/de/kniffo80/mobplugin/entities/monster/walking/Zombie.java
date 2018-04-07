@@ -1,10 +1,7 @@
 package de.kniffo80.mobplugin.entities.monster.walking;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import cn.nukkit.Player;
+import cn.nukkit.Server;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityAgeable;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
@@ -13,16 +10,25 @@ import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
-import cn.nukkit.timings.Timings;
+import cn.nukkit.network.protocol.EntityEventPacket;
+import co.aikar.timings.Timings;
 import de.kniffo80.mobplugin.entities.monster.WalkingMonster;
-import de.kniffo80.mobplugin.entities.utils.Utils;
+import de.kniffo80.mobplugin.route.RouteFinder;
+import de.kniffo80.mobplugin.route.WalkerRouteFinder;
+import de.kniffo80.mobplugin.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class Zombie extends WalkingMonster implements EntityAgeable {
 
     public static final int NETWORK_ID = 32;
 
+
     public Zombie(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
+        this.route = new WalkerRouteFinder(this);
     }
 
     @Override
@@ -32,12 +38,12 @@ public class Zombie extends WalkingMonster implements EntityAgeable {
 
     @Override
     public float getWidth() {
-        return 0.72f;
+        return 0.6f;
     }
 
     @Override
     public float getHeight() {
-        return 1.8f;
+        return 1.95f;
     }
 
     @Override
@@ -53,13 +59,14 @@ public class Zombie extends WalkingMonster implements EntityAgeable {
 //            this.setDataProperty(new ByteEntityData(DATA_AGEABLE_FLAGS, (byte) 0));
 //        }
         this.setDamage(new int[] { 0, 2, 3, 4 });
-        setMaxHealth(20);
+        this.setMaxHealth(20);
     }
 
     @Override
     public boolean isBaby() {
         return false;
 //        return this.getDataFlag(DATA_AGEABLE_FLAGS, DATA_FLAG_BABY);
+
     }
 
     @Override
@@ -83,8 +90,8 @@ public class Zombie extends WalkingMonster implements EntityAgeable {
     public void attackEntity(Entity player) {
         if (this.attackDelay > 10 && player.distanceSquared(this) <= 1) {
             this.attackDelay = 0;
-            HashMap<Integer, Float> damage = new HashMap<>();
-            damage.put(EntityDamageEvent.MODIFIER_BASE, (float) this.getDamage());
+            HashMap<EntityDamageEvent.DamageModifier, Float> damage = new HashMap<>();
+            damage.put(EntityDamageEvent.DamageModifier.BASE, (float) this.getDamage());
 
             if (player instanceof Player) {
                 @SuppressWarnings("serial")
@@ -119,12 +126,17 @@ public class Zombie extends WalkingMonster implements EntityAgeable {
                     points += armorValues.getOrDefault(i.getId(), 0f);
                 }
 
-                damage.put(EntityDamageEvent.MODIFIER_ARMOR,
-                        (float) (damage.getOrDefault(EntityDamageEvent.MODIFIER_ARMOR, 0f) - Math.floor(damage.getOrDefault(EntityDamageEvent.MODIFIER_BASE, 1f) * points * 0.04)));
+                damage.put(EntityDamageEvent.DamageModifier.ARMOR,
+                        (float) (damage.getOrDefault(EntityDamageEvent.DamageModifier.ARMOR, 0f) - Math.floor(damage.getOrDefault(EntityDamageEvent.DamageModifier.BASE, 1f) * points * 0.04)));
             }
-            player.attack(new EntityDamageByEntityEvent(this, player, EntityDamageEvent.CAUSE_ENTITY_ATTACK, damage));
+            player.attack(new EntityDamageByEntityEvent(this, player, EntityDamageEvent.DamageCause.ENTITY_ATTACK, damage));
+            EntityEventPacket pk = new EntityEventPacket();
+            pk.eid = this.getId();
+            pk.event = 4;
+            this.level.addChunkPacket(this.getChunkX() >> 4,this.getChunkZ() >> 4, pk);
         }
     }
+
 
     @Override
     public boolean entityBaseTick(int tickDiff) {
@@ -134,7 +146,7 @@ public class Zombie extends WalkingMonster implements EntityAgeable {
         hasUpdate = super.entityBaseTick(tickDiff);
 
         int time = this.getLevel().getTime() % Level.TIME_FULL;
-        if (!this.isOnFire() && !this.level.isRaining() && !(time >= Level.TIME_NIGHT && time < Level.TIME_SUNRISE)) {
+        if (!this.isOnFire() && !this.level.isRaining() && (time < 12567 || time > 23450)) {
             this.setOnFire(100);
         }
 
@@ -153,7 +165,7 @@ public class Zombie extends WalkingMonster implements EntityAgeable {
         }
         return drops.toArray(new Item[drops.size()]);
     }
-    
+
     @Override
     public int getKillExperience () {
         return 5; // gain 5 experience

@@ -11,10 +11,11 @@ import cn.nukkit.math.NukkitMath;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.potion.Effect;
-import cn.nukkit.timings.Timings;
+import co.aikar.timings.Timings;
 import de.kniffo80.mobplugin.entities.WalkingEntity;
 import de.kniffo80.mobplugin.entities.monster.walking.Enderman;
-import de.kniffo80.mobplugin.entities.utils.Utils;
+import de.kniffo80.mobplugin.route.WalkerRouteFinder;
+import de.kniffo80.mobplugin.utils.Utils;
 
 public abstract class WalkingMonster extends WalkingEntity implements Monster {
 
@@ -28,15 +29,16 @@ public abstract class WalkingMonster extends WalkingEntity implements Monster {
 
     public WalkingMonster(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
+        //this.route = new WalkerRouteFinder(this);
     }
 
     @Override
-    public void setTarget(Entity target) {
-        this.setTarget(target, true);
+    public void setFollowTarget(Entity target) {
+        this.setFollowTarget(target, true);
     }
 
-    public void setTarget(Entity target, boolean attack) {
-        super.setTarget(target);
+    public void setFollowTarget(Entity target, boolean attack) {
+        super.setFollowTarget(target);
         this.canAttack = attack;
     }
 
@@ -175,7 +177,7 @@ public abstract class WalkingMonster extends WalkingEntity implements Monster {
     @Override
     public boolean entityBaseTick(int tickDiff) {
         
-        boolean hasUpdate = false;
+        boolean hasUpdate;
         
         Timings.entityBaseTickTimer.startTiming();
         
@@ -184,7 +186,7 @@ public abstract class WalkingMonster extends WalkingEntity implements Monster {
         this.attackDelay += tickDiff;
         if (this instanceof Enderman) {
             if (this.level.getBlock(new Vector3(NukkitMath.floorDouble(this.x), (int) this.y, NukkitMath.floorDouble(this.z))) instanceof BlockWater) {
-                this.attack(new EntityDamageEvent(this, EntityDamageEvent.CAUSE_DROWNING, 2));
+                this.attack(new EntityDamageEvent(this, EntityDamageEvent.DamageCause.DROWNING, 2));
                 this.move(Utils.rand(-20, 20), Utils.rand(-20, 20), Utils.rand(-20, 20));
             }
         } else {
@@ -193,7 +195,7 @@ public abstract class WalkingMonster extends WalkingEntity implements Monster {
                 int airTicks = this.getDataPropertyShort(DATA_AIR) - tickDiff;
                 if (airTicks <= -20) {
                     airTicks = 0;
-                    this.attack(new EntityDamageEvent(this, EntityDamageEvent.CAUSE_DROWNING, 2));
+                    this.attack(new EntityDamageEvent(this, EntityDamageEvent.DamageCause.DROWNING, 2));
                 }
                 this.setDataProperty(new ShortEntityData(DATA_AIR, airTicks));
             } else {

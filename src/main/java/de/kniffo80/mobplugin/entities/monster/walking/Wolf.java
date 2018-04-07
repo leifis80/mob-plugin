@@ -1,19 +1,23 @@
 package de.kniffo80.mobplugin.entities.monster.walking;
 
-import java.util.HashMap;
-
 import cn.nukkit.Player;
+import cn.nukkit.Server;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.entity.data.IntEntityData;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.item.Item;
+import cn.nukkit.item.ItemDye;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.network.protocol.EntityEventPacket;
 import cn.nukkit.utils.DyeColor;
 import de.kniffo80.mobplugin.MobPlugin;
 import de.kniffo80.mobplugin.entities.monster.TameableMonster;
+import de.kniffo80.mobplugin.utils.Utils;
+
+import java.util.HashMap;
 
 public class Wolf extends TameableMonster {
 
@@ -38,12 +42,12 @@ public class Wolf extends TameableMonster {
 
     @Override
     public float getWidth() {
-        return 0.72f;
+        return 0.6f;
     }
 
     @Override
     public float getHeight() {
-        return 0.9f;
+        return 0.85f;
     }
 
     @Override
@@ -64,8 +68,7 @@ public class Wolf extends TameableMonster {
         }
 
         this.setMaxHealth(8);
-        this.fireProof = true;
-        // this.setDamage(new int[] { 0, 3, 4, 6 });
+        this.setDamage(new int[] { 0, 3, 4, 6 });
     }
 
     @Override
@@ -89,12 +92,42 @@ public class Wolf extends TameableMonster {
     }
 
     @Override
-    public void attack(EntityDamageEvent ev) {
+    public boolean onInteract(Player player, Item item) {
+        if(item.equals(Item.get(Item.BONE))){
+            if(!this.hasOwner()) {
+                player.getInventory().removeItem(Item.get(Item.BONE, 0, 1));
+                if (Utils.rand(0, 3) == 3) {
+                    EntityEventPacket packet = new EntityEventPacket();
+                    packet.eid = player.getId();
+                    packet.event = EntityEventPacket.TAME_SUCCESS;
+                    Server.broadcastPacket(new Player[]{player}, packet);
+                    this.setOwner(player);
+                    this.setCollarColor(DyeColor.RED);
+                    return true;
+                } else {
+                    EntityEventPacket packet = new EntityEventPacket();
+                    packet.eid = player.getId();
+                    packet.event = EntityEventPacket.TAME_FAIL;
+                    Server.broadcastPacket(new Player[]{player}, packet);
+                }
+            }
+        }else if(item.equals(Item.get(Item.DYE),false)){
+            if(this.hasOwner() && player.equals(this.getOwner())){
+                this.setCollarColor(((ItemDye)item).getDyeColor());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean attack(EntityDamageEvent ev) {
         super.attack(ev);
 
         if (!ev.isCancelled()) {
             this.setAngry(true);
         }
+        return true;
     }
 
     @Override
@@ -102,8 +135,8 @@ public class Wolf extends TameableMonster {
         if (MobPlugin.MOB_AI_ENABLED) {
             if (this.attackDelay > 10 && this.distanceSquared(player) < 1.6) {
                 this.attackDelay = 0;
-                HashMap<Integer, Float> damage = new HashMap<>();
-                damage.put(EntityDamageEvent.MODIFIER_BASE, (float) this.getDamage());
+                HashMap<EntityDamageEvent.DamageModifier, Float> damage = new HashMap<>();
+                damage.put(EntityDamageEvent.DamageModifier.BASE, (float) this.getDamage());
 
                 if (player instanceof Player) {
                     @SuppressWarnings("serial")
@@ -138,10 +171,10 @@ public class Wolf extends TameableMonster {
                         points += armorValues.getOrDefault(i.getId(), 0f);
                     }
 
-                    damage.put(EntityDamageEvent.MODIFIER_ARMOR,
-                            (float) (damage.getOrDefault(EntityDamageEvent.MODIFIER_ARMOR, 0f) - Math.floor(damage.getOrDefault(EntityDamageEvent.MODIFIER_BASE, 1f) * points * 0.04)));
+                    damage.put(EntityDamageEvent.DamageModifier.ARMOR,
+                            (float) (damage.getOrDefault(EntityDamageEvent.DamageModifier.ARMOR, 0f) - Math.floor(damage.getOrDefault(EntityDamageEvent.DamageModifier.BASE, 1f) * points * 0.04)));
                 }
-                player.attack(new EntityDamageByEntityEvent(this, player, EntityDamageEvent.CAUSE_ENTITY_ATTACK, damage));
+                player.attack(new EntityDamageByEntityEvent(this, player, EntityDamageEvent.DamageCause.ENTITY_ATTACK, damage));
             }
         }
     }
@@ -158,8 +191,8 @@ public class Wolf extends TameableMonster {
 
     /**
      * Sets the color of the wolves collar (default is 14)
-     * 
-     * @param collarColor the color to be set (when tamed it should be RED)
+     *
+     * @param color the color to be set (when tamed it should be RED)
      */
     public void setCollarColor(DyeColor color) {
         this.namedTag.putInt(NBT_KEY_COLLAR_COLOR, color.getDyeData());

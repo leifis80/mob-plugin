@@ -8,19 +8,19 @@ import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.entity.ProjectileLaunchEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Location;
+import cn.nukkit.level.Sound;
 import cn.nukkit.level.format.FullChunk;
-import cn.nukkit.level.sound.LaunchSound;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.potion.Effect;
 import cn.nukkit.potion.Potion;
 import de.kniffo80.mobplugin.MobPlugin;
 import de.kniffo80.mobplugin.entities.monster.WalkingMonster;
-import de.kniffo80.mobplugin.entities.utils.Utils;
+import de.kniffo80.mobplugin.utils.Utils;
 
 public class Witch extends WalkingMonster {
 
-    public static final int  NETWORK_ID   = 45;
+    public static final int NETWORK_ID = 45;
 
     private static final int ATTACK_TICKS = 20; // how many ticks does the witch need to attack
 
@@ -35,12 +35,12 @@ public class Witch extends WalkingMonster {
 
     @Override
     public float getWidth() {
-        return 0.72f;
+        return 0.6f;
     }
 
     @Override
     public float getHeight() {
-        return 1.8f;
+        return 1.95f;
     }
 
     @Override
@@ -64,14 +64,11 @@ public class Witch extends WalkingMonster {
     }
 
     @Override
-    public void attack(EntityDamageEvent ev) {
+    public boolean attack(EntityDamageEvent ev) {
         super.attack(ev);
+        return true;
     }
 
-    /*
-     * (@Override)
-     * @see de.kniffo80.mobplugin.entities.monster.Monster#attackEntity(cn.nukkit.entity.Entity)
-     */
     @Override
     public void attackEntity(Entity player) {
         if (MobPlugin.MOB_AI_ENABLED) {
@@ -105,11 +102,11 @@ public class Witch extends WalkingMonster {
                         thrownPotion.kill();
                     } else {
                         thrownPotion.spawnToAll();
-                        this.level.addSound(new LaunchSound(this), this.getViewers().values());
+                        this.level.addSound(this, Sound.MOB_WITCH_THROW);
                     }
                 }
             } else {
-                this.attackDelay ++;
+                this.attackDelay++;
             }
         }
     }

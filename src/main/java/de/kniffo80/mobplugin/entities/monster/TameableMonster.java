@@ -1,8 +1,3 @@
-/**
- * TameableMonster.java
- * 
- * Created on 16:54:00
- */
 package de.kniffo80.mobplugin.entities.monster;
 
 import cn.nukkit.Player;
@@ -21,6 +16,8 @@ public abstract class TameableMonster extends WalkingMonster implements Tameable
     private Server          server          = null;
 
     private Player          owner           = null;
+
+    private String          ownerUUID       = "";
 
     private boolean         sitting         = false;
 
@@ -41,7 +38,7 @@ public abstract class TameableMonster extends WalkingMonster implements Tameable
                 this.setSitting(namedTag.getBoolean(NAMED_TAG_SITTING));
             }
         }
-        
+
     }
 
     @Override
@@ -60,6 +57,10 @@ public abstract class TameableMonster extends WalkingMonster implements Tameable
     @Override
     public Player getOwner() {
         return owner;
+    }
+
+    public boolean hasOwner(){
+        return owner!=null;
     }
 
     /**
@@ -85,8 +86,8 @@ public abstract class TameableMonster extends WalkingMonster implements Tameable
         this.sitting = flag;
         setSittingDataProperty(flag);
     }
-    
-    
+
+
     private void setTamed (boolean tamed) {
         this.setDataFlag(DATA_FLAGS, DATA_FLAG_TAMED, tamed);
         // following code isn't working
@@ -98,7 +99,7 @@ public abstract class TameableMonster extends WalkingMonster implements Tameable
 //            setDataProperty(new ByteEntityData(DATA_TAMED_FLAG, Byte.valueOf((byte) (var & -5))));
 //        }
     }
-    
+
     private void setSittingDataProperty(boolean sit) {
         this.setDataFlag(DATA_FLAGS, DATA_FLAG_SITTING, sit);
         // following code isn't working
@@ -110,5 +111,14 @@ public abstract class TameableMonster extends WalkingMonster implements Tameable
 //            setDataProperty(new ByteEntityData(DATA_TAMED_FLAG, (byte) (var & -2)));
 //        }
     }
-    
+
+    @Override
+    public String getOwnerUUID() {
+        return ownerUUID;
+    }
+
+    @Override
+    public void setOwnerUUID(String ownerUUID) {
+        this.ownerUUID = ownerUUID;
+    }
 }

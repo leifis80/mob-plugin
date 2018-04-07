@@ -21,12 +21,12 @@ public class Bat extends FlyingAnimal {
 
     @Override
     public float getWidth() {
-        return 0.3f;
+        return 0.5f;
     }
 
     @Override
     public float getHeight() {
-        return 0.3f;
+        return 0.9f;
     }
 
     @Override
@@ -46,9 +46,6 @@ public class Bat extends FlyingAnimal {
         return new Item[0];
     }
 
-    /* (@Override)
-     * @see de.kniffo80.mobplugin.entities.BaseEntity#getKillExperience()
-     */
     @Override
     public int getKillExperience() {
         return 0;

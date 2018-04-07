@@ -8,9 +8,8 @@ import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.potion.Effect;
-import de.kniffo80.mobplugin.MobPlugin;
 import de.kniffo80.mobplugin.entities.FlyingEntity;
-import de.kniffo80.mobplugin.entities.utils.Utils;
+import de.kniffo80.mobplugin.utils.Utils;
 
 public abstract class FlyingMonster extends FlyingEntity implements Monster {
 
@@ -27,12 +26,12 @@ public abstract class FlyingMonster extends FlyingEntity implements Monster {
     }
 
     @Override
-    public void setTarget(Entity target) {
+    public void setFollowTarget(Entity target) {
         this.setTarget(target, true);
     }
 
     public void setTarget(Entity target, boolean attack) {
-        super.setTarget(target);
+        super.setFollowTarget(target);
         this.canAttack = attack;
     }
 
@@ -166,7 +165,7 @@ public abstract class FlyingMonster extends FlyingEntity implements Monster {
     }
 
     public boolean entityBaseTick(int tickDiff) {
-        boolean hasUpdate = false;
+        boolean hasUpdate;
         // Timings.timerEntityBaseTick.startTiming();
 
         hasUpdate = super.entityBaseTick(tickDiff);
@@ -177,7 +176,7 @@ public abstract class FlyingMonster extends FlyingEntity implements Monster {
             int airTicks = this.getDataPropertyInt(DATA_AIR) - tickDiff;
             if (airTicks <= -20) {
                 airTicks = 0;
-                this.attack(new EntityDamageEvent(this, EntityDamageEvent.CAUSE_DROWNING, 2));
+                this.attack(new EntityDamageEvent(this, EntityDamageEvent.DamageCause.DROWNING, 2));
             }
             this.setDataProperty(new ShortEntityData(DATA_AIR, airTicks));
         } else {

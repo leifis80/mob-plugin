@@ -1,7 +1,5 @@
 package de.kniffo80.mobplugin.entities.monster.walking;
 
-import java.util.HashMap;
-
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
@@ -10,6 +8,9 @@ import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
 import de.kniffo80.mobplugin.entities.monster.WalkingMonster;
+import de.kniffo80.mobplugin.route.WalkerRouteFinder;
+
+import java.util.HashMap;
 
 public class Silverfish extends WalkingMonster {
 
@@ -17,6 +18,7 @@ public class Silverfish extends WalkingMonster {
 
     public Silverfish(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
+        this.route = new WalkerRouteFinder(this);
     }
 
     @Override
@@ -26,7 +28,7 @@ public class Silverfish extends WalkingMonster {
 
     @Override
     public float getWidth() {
-        return 0.45f;
+        return 0.4f;
     }
 
     @Override
@@ -51,8 +53,8 @@ public class Silverfish extends WalkingMonster {
     public void attackEntity(Entity player) {
         if (this.attackDelay > 10 && this.distanceSquared(player) < 1) {
             this.attackDelay = 0;
-            HashMap<Integer, Float> damage = new HashMap<>();
-            damage.put(EntityDamageEvent.MODIFIER_BASE, (float) this.getDamage());
+            HashMap<EntityDamageEvent.DamageModifier, Float> damage = new HashMap<>();
+            damage.put(EntityDamageEvent.DamageModifier.BASE, (float) this.getDamage());
 
             if (player instanceof Player) {
                 @SuppressWarnings("serial")
@@ -87,10 +89,10 @@ public class Silverfish extends WalkingMonster {
                     points += armorValues.getOrDefault(i.getId(), 0f);
                 }
 
-                damage.put(EntityDamageEvent.MODIFIER_ARMOR,
-                        (float) (damage.getOrDefault(EntityDamageEvent.MODIFIER_ARMOR, 0f) - Math.floor(damage.getOrDefault(EntityDamageEvent.MODIFIER_BASE, 1f) * points * 0.04)));
+                damage.put(EntityDamageEvent.DamageModifier.ARMOR,
+                        (float) (damage.getOrDefault(EntityDamageEvent.DamageModifier.ARMOR, 0f) - Math.floor(damage.getOrDefault(EntityDamageEvent.DamageModifier.BASE, 1f) * points * 0.04)));
             }
-            player.attack(new EntityDamageByEntityEvent(this, player, EntityDamageEvent.CAUSE_ENTITY_ATTACK, damage));
+            player.attack(new EntityDamageByEntityEvent(this, player, EntityDamageEvent.DamageCause.ENTITY_ATTACK, damage));
         }
     }
 
@@ -98,11 +100,11 @@ public class Silverfish extends WalkingMonster {
     public Item[] getDrops() {
         return new Item[0];
     }
-    
+
     @Override
     public int getKillExperience () {
         return 5; // gain 5 experience
     }
-    
+
 
 }
