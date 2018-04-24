@@ -12,6 +12,7 @@ import cn.nukkit.item.Item;
 import cn.nukkit.level.Explosion;
 import cn.nukkit.level.Sound;
 import cn.nukkit.level.format.FullChunk;
+import cn.nukkit.level.particle.HugeExplodeSeedParticle;
 import cn.nukkit.math.NukkitMath;
 import cn.nukkit.math.Vector2;
 import cn.nukkit.math.Vector3;
@@ -99,6 +100,7 @@ public class Creeper extends WalkingMonster implements EntityExplosive {
                 explosion.explodeA();
             }
             explosion.explodeB();
+            this.level.addParticle(new HugeExplodeSeedParticle(this));
             this.exploded = true;
         }
         this.close();
