@@ -60,24 +60,20 @@ public class Chicken extends WalkingAnimal {
         return 0.2f;
     }
 
-    @Override
+    /*@Override
     public float getGravity() {
         return 0.04f;
-    }
+    }*/
 
     @Override
     public void initEntity() {
         super.initEntity();
-        if(this.namedTag.contains("EggLayTime")){
+        if (this.namedTag.contains("EggLayTime")) {
             this.EggLayTime = this.namedTag.getInt("EggLayTime");
-        }else{
+        } else {
             this.EggLayTime = this.getRandomEggLayTime();
         }
-        if(this.namedTag.contains("IsChickenJockey")){
-            this.IsChickenJockey = this.namedTag.getBoolean("IsChickenJockey");
-        }else{
-            this.IsChickenJockey = false;
-        }
+        this.IsChickenJockey = this.namedTag.contains("IsChickenJockey") && this.namedTag.getBoolean("IsChickenJockey");
 
         this.setMaxHealth(4);
     }
@@ -158,7 +154,7 @@ public class Chicken extends WalkingAnimal {
         return Utils.rand(1, 4); // gain 1-3 experience
     }
 
-    public int getRandomEggLayTime(){
+    private int getRandomEggLayTime(){
         return Utils.rand(6000,12000);
     }
 

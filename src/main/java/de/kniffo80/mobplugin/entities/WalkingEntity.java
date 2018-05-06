@@ -7,6 +7,7 @@ import cn.nukkit.block.BlockLiquid;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.level.format.FullChunk;
+import cn.nukkit.level.particle.BubbleParticle;
 import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.NukkitMath;
 import cn.nukkit.math.Vector2;
@@ -162,6 +163,7 @@ public abstract class WalkingEntity extends BaseEntity {
                     if (this.isInsideOfWater()) {
                         this.motionX = this.getSpeed() * 0.05 * (x / diff);
                         this.motionZ = this.getSpeed() * 0.05 * (z / diff);
+                        this.level.addParticle(new BubbleParticle(this.add(Utils.rand(-2.0,2.0),Utils.rand(-0.5,0),Utils.rand(-2.0,2.0))));
                     } else {
                         this.motionX = this.getSpeed() * 0.1 * (x / diff);
                         this.motionZ = this.getSpeed() * 0.1 * (z / diff);
@@ -185,12 +187,13 @@ public abstract class WalkingEntity extends BaseEntity {
                     this.motionZ = 0;
                 } else {
                     if (this.isInsideOfWater()) {
-                          this.motionX = this.getSpeed() * 0.05 * (x / diff);
-                          this.motionZ = this.getSpeed() * 0.05 * (z / diff);
-                      } else {
-                          this.motionX = this.getSpeed() * 0.15 * (x / diff);
-                          this.motionZ = this.getSpeed() * 0.15 * (z / diff);
-                      }
+                        this.motionX = this.getSpeed() * 0.05 * (x / diff);
+                        this.motionZ = this.getSpeed() * 0.05 * (z / diff);
+                        this.level.addParticle(new BubbleParticle(this.add(Utils.rand(-2.0,2.0),Utils.rand(-0.5,0),Utils.rand(-2.0,2.0))));
+                    } else {
+                        this.motionX = this.getSpeed() * 0.15 * (x / diff);
+                        this.motionZ = this.getSpeed() * 0.15 * (z / diff);
+                    }
                 }
                 this.yaw = Math.toDegrees(-Math.atan2(x / diff, z / diff));
                 this.pitch = y == 0 ? 0 : Math.toDegrees(-Math.atan2(y, Math.sqrt(x * x + z * z)));
@@ -217,7 +220,7 @@ public abstract class WalkingEntity extends BaseEntity {
                     this.motionY = 0;
                 } else if (this.motionY > -this.getGravity() * 4) {
                     if (!(this.level.getBlock(new Vector3(NukkitMath.floorDouble(this.x), (int) (this.y + 0.8), NukkitMath.floorDouble(this.z))) instanceof BlockLiquid)) {
-                        this.motionY -= this.getGravity() * 4;
+                        this.motionY -= this.getGravity() * 1;
                     }
                 } else {
                     this.motionY -= this.getGravity() * tickDiff;
@@ -226,7 +229,7 @@ public abstract class WalkingEntity extends BaseEntity {
             this.updateMovement();
             if(this.route != null){
                 if(this.route.hasCurrentNode() && this.route.hasArrivedNode(this)) {
-                    this.target = null;
+                    //this.target = null;
                     if (this.route.hasNext()) {
                         this.target = this.route.next();
                     }

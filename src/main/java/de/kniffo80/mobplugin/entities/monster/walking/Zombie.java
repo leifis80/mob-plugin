@@ -16,6 +16,7 @@ import de.kniffo80.mobplugin.entities.monster.WalkingMonster;
 import de.kniffo80.mobplugin.route.RouteFinder;
 import de.kniffo80.mobplugin.route.WalkerRouteFinder;
 import de.kniffo80.mobplugin.utils.Utils;
+import jdk.nashorn.internal.objects.annotations.Constructor;
 
 import java.util.ArrayList;
 import java.util.HashMap;

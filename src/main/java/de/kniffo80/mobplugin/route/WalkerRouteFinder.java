@@ -111,7 +111,7 @@ public class WalkerRouteFinder extends SimpleRouteFinder {
 
 
         findingPath = FloydSmooth(findingPath);
-        findingPath.forEach(c->level.addParticle(new RedstoneParticle(c.getVector3().add(0,0.2,0))));
+        //findingPath.forEach(c->level.addParticle(new RedstoneParticle(c.getVector3().add(0,0.2,0))));
         this.resetNodes();
 
         this.addNode(findingPath);

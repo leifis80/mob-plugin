@@ -142,7 +142,12 @@ public abstract class BaseEntity extends EntityCreature {
             this.age = this.namedTag.getShort("Age");
         }
 
-        this.setDataProperty(new ByteEntityData(DATA_FLAG_NO_AI, (byte) 1));
+        //this.setDataProperty(new ByteEntityData(DATA_FLAG_NO_AI, (byte) 1));
+    }
+
+    @Override
+    public String getName(){
+        return this.getClass().getSimpleName();
     }
 
     public void saveNBT() {
@@ -166,6 +171,7 @@ public abstract class BaseEntity extends EntityCreature {
             pk.yaw = (float) this.yaw;
             pk.pitch = (float) this.pitch;
             pk.metadata = this.dataProperties;
+
             player.dataPacket(pk);
 
             this.hasSpawned.put(player.getLoaderId(), player);
