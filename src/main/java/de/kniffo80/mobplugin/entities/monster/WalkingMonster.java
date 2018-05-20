@@ -14,7 +14,6 @@ import cn.nukkit.potion.Effect;
 import co.aikar.timings.Timings;
 import de.kniffo80.mobplugin.entities.WalkingEntity;
 import de.kniffo80.mobplugin.entities.monster.walking.Enderman;
-import de.kniffo80.mobplugin.route.WalkerRouteFinder;
 import de.kniffo80.mobplugin.utils.Utils;
 
 public abstract class WalkingMonster extends WalkingEntity implements Monster {
@@ -176,11 +175,11 @@ public abstract class WalkingMonster extends WalkingEntity implements Monster {
 
     @Override
     public boolean entityBaseTick(int tickDiff) {
-        
+
         boolean hasUpdate;
-        
+
         Timings.entityBaseTickTimer.startTiming();
-        
+
         hasUpdate = super.entityBaseTick(tickDiff);
 
         this.attackDelay += tickDiff;

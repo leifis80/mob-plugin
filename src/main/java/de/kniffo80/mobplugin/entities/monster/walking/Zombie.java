@@ -1,7 +1,6 @@
 package de.kniffo80.mobplugin.entities.monster.walking;
 
 import cn.nukkit.Player;
-import cn.nukkit.Server;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityAgeable;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
@@ -13,10 +12,8 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.EntityEventPacket;
 import co.aikar.timings.Timings;
 import de.kniffo80.mobplugin.entities.monster.WalkingMonster;
-import de.kniffo80.mobplugin.route.RouteFinder;
 import de.kniffo80.mobplugin.route.WalkerRouteFinder;
 import de.kniffo80.mobplugin.utils.Utils;
-import jdk.nashorn.internal.objects.annotations.Constructor;
 
 import java.util.ArrayList;
 import java.util.HashMap;

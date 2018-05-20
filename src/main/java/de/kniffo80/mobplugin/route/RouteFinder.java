@@ -6,7 +6,6 @@ import de.kniffo80.mobplugin.entities.WalkingEntity;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**

@@ -1,13 +1,9 @@
 package de.kniffo80.mobplugin.route;
 
 import cn.nukkit.block.Block;
-import cn.nukkit.block.BlockSlab;
-import cn.nukkit.level.particle.RedstoneParticle;
-import cn.nukkit.level.particle.SpellParticle;
 import cn.nukkit.math.AxisAlignedBB;
 import cn.nukkit.math.SimpleAxisAlignedBB;
 import cn.nukkit.math.Vector3;
-import cn.nukkit.utils.BlockColor;
 import de.kniffo80.mobplugin.entities.WalkingEntity;
 import de.kniffo80.mobplugin.utils.Utils;
 

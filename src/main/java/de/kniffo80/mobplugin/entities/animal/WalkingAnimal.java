@@ -9,11 +9,9 @@ import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.level.particle.HeartParticle;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
-import cn.nukkit.network.protocol.EntityEventPacket;
 import cn.nukkit.potion.Effect;
 import co.aikar.timings.Timings;
 import de.kniffo80.mobplugin.entities.WalkingEntity;
-import de.kniffo80.mobplugin.route.WalkerRouteFinder;
 import de.kniffo80.mobplugin.utils.Utils;
 
 public abstract class WalkingAnimal extends WalkingEntity implements Animal {

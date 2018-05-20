@@ -1,7 +1,5 @@
 package de.kniffo80.mobplugin.runnable;
 
-import cn.nukkit.Server;
-import cn.nukkit.scheduler.AsyncTask;
 import de.kniffo80.mobplugin.route.RouteFinder;
 
 /**

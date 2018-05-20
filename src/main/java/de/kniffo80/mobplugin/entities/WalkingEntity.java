@@ -4,11 +4,12 @@ import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockFence;
 import cn.nukkit.block.BlockFenceGate;
 import cn.nukkit.block.BlockLiquid;
+import cn.nukkit.block.BlockStairs;
+import cn.nukkit.block.BlockSlab;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.level.particle.BubbleParticle;
-import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.NukkitMath;
 import cn.nukkit.math.Vector2;
 import cn.nukkit.math.Vector3;
@@ -17,7 +18,6 @@ import de.kniffo80.mobplugin.MobPlugin;
 import de.kniffo80.mobplugin.RouteFinderThreadPool;
 import de.kniffo80.mobplugin.entities.animal.Animal;
 import de.kniffo80.mobplugin.route.RouteFinder;
-import de.kniffo80.mobplugin.route.WalkerRouteFinder;
 import de.kniffo80.mobplugin.runnable.RouteFinderSearchTask;
 import de.kniffo80.mobplugin.utils.Utils;
 
@@ -116,12 +116,16 @@ public abstract class WalkingEntity extends BaseEntity {
             return false;
         }
 
-        Block block = that.getSide(this.getDirection());
-        if (!block.canPassThrough() && block.getSide(BlockFace.UP).canPassThrough() && that.getSide(BlockFace.UP, 2).canPassThrough()) {
+        Block block = that.getSide(this.getHorizontalFacing());
+        if (!block.canPassThrough() && block.up().canPassThrough() && that.up(2).canPassThrough()) {
             if (block instanceof BlockFence || block instanceof BlockFenceGate) {
                 this.motionY = this.getGravity();
             } else if (this.motionY <= this.getGravity() * 4) {
                 this.motionY = this.getGravity() * 4;
+            } else if (block instanceof BlockSlab && block instanceof BlockStairs) {
+                this.motionY = this.getGravity() * 4;
+            } else if (this.motionY <= (this.getGravity() * 8)) {
+                this.motionY = this.getGravity() * 8;
             } else {
                 this.motionY += this.getGravity() * 0.25;
             }

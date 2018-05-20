@@ -2,7 +2,6 @@ package de.kniffo80.mobplugin;
 
 import cn.nukkit.IPlayer;
 import cn.nukkit.Player;
-import cn.nukkit.Server;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
 import cn.nukkit.blockentity.BlockEntity;
@@ -17,7 +16,6 @@ import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDeathEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
-import cn.nukkit.event.player.PlayerMouseOverEntityEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Location;
@@ -31,7 +29,6 @@ import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.network.protocol.EntityEventPacket;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
-import cn.nukkit.utils.DyeColor;
 import de.kniffo80.mobplugin.entities.BaseEntity;
 import de.kniffo80.mobplugin.entities.animal.flying.*;
 import de.kniffo80.mobplugin.entities.animal.jumping.Rabbit;
@@ -54,8 +51,6 @@ import java.util.List;
 public class MobPlugin extends PluginBase implements Listener {
 
     public static boolean MOB_AI_ENABLED = true;
-
-    private int counter = 0;
 
     private Config pluginConfig = null;
 
@@ -88,14 +83,14 @@ public class MobPlugin extends PluginBase implements Listener {
             this.getServer().getScheduler().scheduleDelayedRepeatingTask(this, new AutoSpawnTask(this), spawnDelay, spawnDelay);
         }
 
-        Utils.logServerInfo(String.format("Plugin enabled successful [aiEnabled:%s] [autoSpawnTick:%d]", MOB_AI_ENABLED, spawnDelay));
+        this.getServer().getLogger().info(String.format("\u00A76Mob plugin enabled successful [aiEnabled:%s] [autoSpawnTick:%d]", MOB_AI_ENABLED, spawnDelay));
 
     }
 
     @Override
     public void onDisable() {
         RouteFinderThreadPool.shutDownNow();
-        Utils.logServerInfo("Plugin disabled successful.");
+        this.getServer().getLogger().info("\u00A76Mob plugin disabled successful.");
     }
 
     @Override
@@ -276,23 +271,6 @@ public class MobPlugin extends PluginBase implements Listener {
             playerList.add(player);
         }
         return playerList;
-    }
-
-    /**
-     * checks if a given player name's player instance is already in the given
-     * list
-     *
-     * @param name the name of the player to be checked
-     * @param playerList the existing entries
-     * @return <code>true</code> if the player is already in the list
-     */
-    private boolean isPlayerAlreadyInList(String name, List<IPlayer> playerList) {
-        for (IPlayer player : playerList) {
-            if (player.getName().toLowerCase().equals(name.toLowerCase())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     // --- event listeners ---

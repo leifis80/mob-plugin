@@ -4,7 +4,6 @@ import cn.nukkit.block.BlockLiquid;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.entity.EntityExplosive;
-import cn.nukkit.entity.data.ByteEntityData;
 import cn.nukkit.entity.data.IntEntityData;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.ExplosionPrimeEvent;
@@ -29,8 +28,6 @@ import java.util.List;
 public class Creeper extends WalkingMonster implements EntityExplosive {
 
     public static final int NETWORK_ID = 33;
-
-    public static final int DATA_POWERED = 19;
 
     private int bombTime = 0;
 
@@ -65,24 +62,7 @@ public class Creeper extends WalkingMonster implements EntityExplosive {
     public void initEntity() {
         super.initEntity();
 
-        if (this.namedTag.getBoolean("powered") || this.namedTag.getBoolean("IsPowered")) {
-            this.dataProperties.putBoolean(DATA_POWERED, true);
-        }
         setMaxHealth(20);
-    }
-
-    public boolean isPowered() {
-        return this.getDataPropertyBoolean(DATA_POWERED);
-    }
-
-    public void setPowered() {
-        this.namedTag.putBoolean("powered", true);
-        this.setDataProperty(new ByteEntityData(DATA_POWERED, 1));
-    }
-
-    public void setPowered(boolean powered) {
-        this.namedTag.putBoolean("powered", powered);
-        this.setDataProperty(new ByteEntityData(DATA_POWERED, powered ? 1 : 0));
     }
 
     public int getBombTime() {
@@ -157,6 +137,7 @@ public class Creeper extends WalkingMonster implements EntityExplosive {
                     if (bombTime >= 0) {
                         this.level.addSound(this, Sound.RANDOM_FUSE);
                         this.setDataProperty(new IntEntityData(Entity.DATA_FUSE_LENGTH,bombTime));
+                        this.setDataFlag(DATA_FLAGS, DATA_FLAG_IGNITED, true);
                     }
                     this.bombTime += tickDiff;
                     if (this.bombTime >= 64) {
@@ -170,6 +151,7 @@ public class Creeper extends WalkingMonster implements EntityExplosive {
                 this.bombTime -= tickDiff;
                 if (this.bombTime < 0) {
                     this.bombTime = 0;
+                    this.setDataFlag(DATA_FLAGS, DATA_FLAG_IGNITED, false);
                 }
 
                 this.motionX = this.getSpeed() * 0.15 * (x / diff);
@@ -230,9 +212,6 @@ public class Creeper extends WalkingMonster implements EntityExplosive {
     @Override
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
-        if (this.exploded && this.isPowered()) {
-            // TODO: add creeper head
-        }
         if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
             int gunPowder = Utils.rand(0, 3); // drops 0-2 gunpowder
             for (int i = 0; i < gunPowder; i++) {
