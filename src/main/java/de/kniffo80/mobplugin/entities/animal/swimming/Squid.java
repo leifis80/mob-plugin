@@ -9,10 +9,10 @@ import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.EntityEventPacket;
 import cn.nukkit.utils.DyeColor;
-import de.kniffo80.mobplugin.entities.animal.WalkingAnimal;
+import de.kniffo80.mobplugin.entities.animal.SwimmingAnimal;
 import de.kniffo80.mobplugin.utils.Utils;
 
-public class Squid extends WalkingAnimal {
+public class Squid extends SwimmingAnimal {
 
     public static final int NETWORK_ID = 17;
 
@@ -79,5 +79,4 @@ public class Squid extends WalkingAnimal {
         this.level.addChunkPacket(this.getChunkX() >> 4,this.getChunkZ() >> 4,pk0);
         return att;
     }
-
 }

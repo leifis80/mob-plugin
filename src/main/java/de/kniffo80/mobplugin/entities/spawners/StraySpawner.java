@@ -4,7 +4,6 @@ import cn.nukkit.IPlayer;
 import cn.nukkit.block.Block;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
-import cn.nukkit.level.biome.Biome;
 import cn.nukkit.utils.Config;
 import de.kniffo80.mobplugin.entities.monster.walking.Stray;
 import de.kniffo80.mobplugin.AutoSpawnTask;
@@ -29,12 +28,14 @@ public class StraySpawner extends AbstractEntitySpawner {
     public SpawnResult spawn(IPlayer iPlayer, Position pos, Level level) {
         SpawnResult result = SpawnResult.OK;
 
-        // TODO: a zombie may also be spawned with items ... but that's to be done later
+        int blockId = level.getBlockIdAt((int) pos.x, (int) pos.y, (int) pos.z);
         int blockLightLevel = level.getBlockLightAt((int) pos.x, (int) pos.y, (int) pos.z);
         int biomeId = level.getBiomeId((int) pos.x, (int) pos.z);
         int time = level.getTime() % Level.TIME_FULL;
 
-        if (blockLightLevel > 7) {
+        if (Block.transparent[blockId]) { // only spawns on opaque blocks
+            result = SpawnResult.WRONG_BLOCK;
+        }else if (blockLightLevel > 7) {
             result = SpawnResult.WRONG_LIGHTLEVEL;
         } else if (pos.y > 127 || pos.y < 1 || level.getBlockIdAt((int) pos.x, (int) pos.y, (int) pos.z) == Block.AIR) { // cannot spawn on AIR block
             result = SpawnResult.POSITION_MISMATCH;

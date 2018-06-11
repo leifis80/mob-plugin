@@ -59,7 +59,7 @@ public class Blaze extends FlyingMonster {
         super.initEntity();
 
         this.fireProof = true;
-        this.setDamage(new int[]{0, 0, 0, 0});
+        this.setDamage(new float[]{0, 0, 0, 0});
     }
 
     protected void checkTarget() {

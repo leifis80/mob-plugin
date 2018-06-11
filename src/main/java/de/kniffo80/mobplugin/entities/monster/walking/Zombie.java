@@ -56,7 +56,7 @@ public class Zombie extends WalkingMonster implements EntityAgeable {
 //        if (this.getDataProperty(DATA_AGEABLE_FLAGS) == null) {
 //            this.setDataProperty(new ByteEntityData(DATA_AGEABLE_FLAGS, (byte) 0));
 //        }
-        this.setDamage(new int[] { 0, 2, 3, 4 });
+        this.setDamage(new float[] { 0, 2, 3, 4 });
         this.setMaxHealth(20);
     }
 
@@ -73,13 +73,13 @@ public class Zombie extends WalkingMonster implements EntityAgeable {
 
         if (this.isAlive()) {
             if (15 < this.getHealth()) {
-                this.setDamage(new int[] { 0, 2, 3, 4 });
+                this.setDamage(new float[] { 0, 2, 3, 4 });
             } else if (10 < this.getHealth()) {
-                this.setDamage(new int[] { 0, 3, 4, 6 });
+                this.setDamage(new float[] { 0, 3, 4, 6 });
             } else if (5 < this.getHealth()) {
-                this.setDamage(new int[] { 0, 3, 5, 7 });
+                this.setDamage(new float[] { 0, 3, 5, 7 });
             } else {
-                this.setDamage(new int[] { 0, 4, 6, 9 });
+                this.setDamage(new float[] { 0, 4, 6, 9 });
             }
         }
     }
@@ -89,7 +89,7 @@ public class Zombie extends WalkingMonster implements EntityAgeable {
         if (this.attackDelay > 10 && player.distanceSquared(this) <= 1) {
             this.attackDelay = 0;
             HashMap<EntityDamageEvent.DamageModifier, Float> damage = new HashMap<>();
-            damage.put(EntityDamageEvent.DamageModifier.BASE, (float) this.getDamage());
+            damage.put(EntityDamageEvent.DamageModifier.BASE, this.getDamage());
 
             if (player instanceof Player) {
                 @SuppressWarnings("serial")
@@ -138,14 +138,14 @@ public class Zombie extends WalkingMonster implements EntityAgeable {
 
     @Override
     public boolean entityBaseTick(int tickDiff) {
-        boolean hasUpdate = false;
+        boolean hasUpdate;
         Timings.entityBaseTickTimer.startTiming();
 
         hasUpdate = super.entityBaseTick(tickDiff);
 
         int time = this.getLevel().getTime() % Level.TIME_FULL;
         if (!this.isOnFire() && !this.level.isRaining() && (time < 12567 || time > 23450)) {
-            this.setOnFire(100);
+            this.setOnFire(1);
         }
 
         Timings.entityBaseTickTimer.stopTiming();

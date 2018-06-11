@@ -18,7 +18,7 @@ public abstract class RouteFinder {
 
     protected int current = 0;
 
-    public WalkingEntity entity = null;
+    public WalkingEntity entity;
 
     protected Vector3 start;
     protected Vector3 destination;
@@ -58,8 +58,10 @@ public abstract class RouteFinder {
     }
 
     public void setDestination(Vector3 destination){
-        if(!this.isSearching()) {
-            this.destination = destination;
+        this.destination = destination;
+        if(this.isSearching()){
+            this.interrupt = true;
+            this.research();
         }
     }
 
@@ -136,20 +138,13 @@ public abstract class RouteFinder {
         }
     }
 
-    /*public void arrived(){
-        this.arrived = true;
-    }*/
-
-    /*public boolean isArrived(){
-        return arrived;
-    }*/
-
     public void resetNodes(){
         try{
             this.lock.writeLock().lock();
             this.nodes.clear();
             this.current = 0;
             this.interrupt = false;
+            this.destination = null;
         }finally {
             this.lock.writeLock().unlock();
         }
@@ -158,8 +153,7 @@ public abstract class RouteFinder {
     public abstract boolean search();
 
     public void research(){
-        //this.resetNodes();
-        this.reachable = true;
+        this.resetNodes();
         this.search();
     }
 

@@ -1,7 +1,6 @@
 checkout:
   post:
-    - mvn clean
-    - mvn package
+    - mvn clean package
     - cp -R ./target/MobPlugin-1.0.jar $CIRCLE_ARTIFACTS
 
 machine:

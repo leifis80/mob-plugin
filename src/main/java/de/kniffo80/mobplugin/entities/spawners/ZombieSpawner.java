@@ -30,6 +30,7 @@ public class ZombieSpawner extends AbstractEntitySpawner {
 
         // TODO: a zombie may also be spawned with items ... but that's to be done later
 
+        int blockId = level.getBlockIdAt((int) pos.x, (int) pos.y, (int) pos.z);
         int blockLightLevel = level.getBlockLightAt((int) pos.x, (int) pos.y, (int) pos.z);
         int time = level.getTime() % Level.TIME_FULL;
 
@@ -37,6 +38,8 @@ public class ZombieSpawner extends AbstractEntitySpawner {
             result = SpawnResult.WRONG_LIGHTLEVEL;
         } else if (pos.y > 127 || pos.y < 1 || level.getBlockIdAt((int) pos.x, (int) pos.y, (int) pos.z) == Block.AIR) { // cannot spawn on AIR block
             result = SpawnResult.POSITION_MISMATCH;
+        } else if (Block.transparent[blockId]) { // only spawns on opaque blocks
+            result = SpawnResult.WRONG_BLOCK;
         } else if (time > 13184 && time < 22800) {
             this.spawnTask.createEntity(getEntityName(), pos.add(0, 2.8, 0));
         }

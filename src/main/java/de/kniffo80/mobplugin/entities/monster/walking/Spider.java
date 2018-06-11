@@ -58,7 +58,8 @@ public class Spider extends WalkingMonster {
         super.initEntity();
 
         this.setMaxHealth(16);
-        this.setDamage(new int[] { 0, 2, 2, 3 });
+        this.setDamage(new float[] { 0, 2, 2, 3 });
+        //this.setDataFlag(DATA_FLAGS,DATA_FLAG_CAN_CLIMB);
     }
 
     @Override
@@ -199,7 +200,7 @@ public class Spider extends WalkingMonster {
             if (time > 13184 && time < 22800) { //TODO: better fix
             this.attackDelay = 0;
             HashMap<EntityDamageEvent.DamageModifier, Float> damage = new HashMap<>();
-            damage.put(EntityDamageEvent.DamageModifier.BASE, (float) this.getDamage());
+            damage.put(EntityDamageEvent.DamageModifier.BASE, this.getDamage());
 
             if (player instanceof Player) {
                 @SuppressWarnings("serial")

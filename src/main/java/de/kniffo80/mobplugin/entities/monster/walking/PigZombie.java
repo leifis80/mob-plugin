@@ -63,7 +63,7 @@ public class PigZombie extends WalkingMonster {
         }
 
         this.fireProof = true;
-        this.setDamage(new int[] { 0, 5, 9, 13 });
+        this.setDamage(new float[] { 0, 5, 9, 13 });
         setMaxHealth(20);
     }
 
@@ -86,7 +86,7 @@ public class PigZombie extends WalkingMonster {
         if (this.attackDelay > 10 && this.distanceSquared(player) < 1.44) {
             this.attackDelay = 0;
             HashMap<EntityDamageEvent.DamageModifier, Float> damage = new HashMap<>();
-            damage.put(EntityDamageEvent.DamageModifier.BASE, (float) this.getDamage());
+            damage.put(EntityDamageEvent.DamageModifier.BASE, this.getDamage());
 
             if (player instanceof Player) {
                 @SuppressWarnings("serial")

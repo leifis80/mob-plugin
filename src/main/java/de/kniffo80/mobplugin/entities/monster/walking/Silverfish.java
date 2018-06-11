@@ -46,7 +46,7 @@ public class Silverfish extends WalkingMonster {
         super.initEntity();
 
         this.setMaxHealth(8);
-        this.setDamage(new int[] { 0, 1, 1, 1 });
+        this.setDamage(new float[] { 0, 1, 1, 1 });
     }
 
     @Override
@@ -54,7 +54,7 @@ public class Silverfish extends WalkingMonster {
         if (this.attackDelay > 10 && this.distanceSquared(player) < 1) {
             this.attackDelay = 0;
             HashMap<EntityDamageEvent.DamageModifier, Float> damage = new HashMap<>();
-            damage.put(EntityDamageEvent.DamageModifier.BASE, (float) this.getDamage());
+            damage.put(EntityDamageEvent.DamageModifier.BASE, this.getDamage());
 
             if (player instanceof Player) {
                 @SuppressWarnings("serial")

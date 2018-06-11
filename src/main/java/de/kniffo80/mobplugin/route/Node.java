@@ -14,15 +14,16 @@ public class Node implements Comparable<Node> {
     private int H;
     private int F;
 
-    Node(Vector3 vector3, Node parent,int G,int H){
+    Node(Vector3 vector3, Node parent, int G, int H) {
         this.vector3 = vector3;
         this.parent = parent;
         this.G = G;
         this.H = H;
-        this.F = G+H;
+        this.F = G + H;
     }
-    Node(Vector3 vector3){
-        this(vector3,null,0,0);
+
+    Node(Vector3 vector3) {
+        this(vector3, null, 0, 0);
     }
 
 
@@ -61,24 +62,24 @@ public class Node implements Comparable<Node> {
     @Override
     public int compareTo(Node o) {
         Objects.requireNonNull(o);
-        if(this.getF()!=o.getF()) {
+        if (this.getF() != o.getF()) {
             return this.getF() - o.getF();
         }
         //Breaking ties
         //0.1 = 10.0/100
         double breaking;
-        if((breaking = this.getG()+(this.getH()*0.1) - (o.getG()+(this.getH()*0.1))) > 0){
+        if ((breaking = this.getG() + (this.getH() * 0.1) - (o.getG() + (this.getH() * 0.1))) > 0) {
             return 1;
-        }else if(breaking < 0){
+        } else if (breaking < 0) {
             return -1;
-        }else{
+        } else {
             return 0;
         }
     }
 
     @Override
-    public String toString(){
-        return vector3.toString()+"| G:"+this.G+" H:"+this.H+" F"+this.getF()+(this.parent!=null ? "\tparent:"+String.valueOf(this.parent.getVector3()) : "");
+    public String toString() {
+        return vector3.toString() + "| G:" + this.G + " H:" + this.H + " F" + this.getF() + (this.parent != null ? "\tparent:" + String.valueOf(this.parent.getVector3()) : "");
     }
 
     public Vector3 getVector3() {

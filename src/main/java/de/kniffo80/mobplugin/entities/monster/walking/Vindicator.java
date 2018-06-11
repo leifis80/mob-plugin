@@ -49,7 +49,7 @@ public class Vindicator extends WalkingMonster {
     @Override
     protected void initEntity() {
         super.initEntity();
-        this.setDamage(new int[] { 0, 2, 3, 4 });
+        this.setDamage(new float[] { 0, 2, 3, 4 });
         setMaxHealth(24);
     }
 
@@ -59,13 +59,13 @@ public class Vindicator extends WalkingMonster {
 
         if (this.isAlive()) {
             if (15 < this.getHealth()) {
-                this.setDamage(new int[] { 0, 2, 3, 4 });
+                this.setDamage(new float[] { 0, 2, 3, 4 });
             } else if (10 < this.getHealth()) {
-                this.setDamage(new int[] { 0, 3, 4, 6 });
+                this.setDamage(new float[] { 0, 3, 4, 6 });
             } else if (5 < this.getHealth()) {
-                this.setDamage(new int[] { 0, 3, 5, 7 });
+                this.setDamage(new float[] { 0, 3, 5, 7 });
             } else {
-                this.setDamage(new int[] { 0, 4, 6, 9 });
+                this.setDamage(new float[] { 0, 4, 6, 9 });
             }
         }
     }
@@ -75,7 +75,7 @@ public class Vindicator extends WalkingMonster {
         if (this.attackDelay > 10 && player.distanceSquared(this) <= 1) {
             this.attackDelay = 0;
             HashMap<EntityDamageEvent.DamageModifier, Float> damage = new HashMap<>();
-            damage.put(EntityDamageEvent.DamageModifier.BASE, (float) this.getDamage());
+            damage.put(EntityDamageEvent.DamageModifier.BASE, this.getDamage());
 
             if (player instanceof Player) {
                 @SuppressWarnings("serial")

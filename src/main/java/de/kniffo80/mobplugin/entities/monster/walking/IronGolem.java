@@ -49,15 +49,15 @@ public class IronGolem extends WalkingMonster {
         this.setMaxHealth(100);
         super.initEntity();
 
-        this.setDamage(new int[] { 0, 21, 21, 21 });
-        this.setMinDamage(new int[] { 0, 7, 7, 7 });
+        this.setDamage(new float[] { 0, 21, 21, 21 });
+        this.setMinDamage(new float[] { 0, 7, 7, 7 });
     }
 
     public void attackEntity(Entity player) {
         if (this.attackDelay > 10 && this.distanceSquared(player) < 4) {
             this.attackDelay = 0;
             HashMap<EntityDamageEvent.DamageModifier, Float> damage = new HashMap<>();
-            damage.put(EntityDamageEvent.DamageModifier.BASE, (float) this.getDamage());
+            damage.put(EntityDamageEvent.DamageModifier.BASE, this.getDamage());
 
             if (player instanceof Player) {
                 @SuppressWarnings("serial")

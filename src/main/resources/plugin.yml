@@ -5,12 +5,12 @@ api: ["1.0.6"]
 
 load: STARTUP
 author: kniffo80, matt404, augesrob, PetteriM1, PikyCZ, zzz1999
-description: Mob plugin for Nukkit
-website: https://github.com/Nukkit-coders/mob-plugin
+description: Mob plugin for NukkitX
+website: https://github.com/Nukkit-coders/MobPlugin
 
 commands:
  mob:
-  description: MobPlugin main command
+  description: Mob plugin main command
   aliases: ["mob"]
   usage: /mob
   permission: mobplugin.command

@@ -39,7 +39,7 @@ public class WitherSkeleton extends WalkingMonster {
     @Override
     protected void initEntity() {
         super.initEntity();
-        this.setDamage(new int[] { 0, 3, 4, 6 });
+        this.setDamage(new float[] { 0, 3, 4, 6 });
     }
 
     @Override

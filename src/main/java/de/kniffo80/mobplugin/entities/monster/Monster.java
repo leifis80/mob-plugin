@@ -6,34 +6,34 @@ public interface Monster {
 
     void attackEntity(Entity player);
 
-    int getDamage();
+    float getDamage();
 
-    int getDamage(Integer difficulty);
+    float getDamage(Integer difficulty);
 
-    int getMinDamage();
+    float getMinDamage();
 
-    int getMinDamage(Integer difficulty);
+    float getMinDamage(Integer difficulty);
 
-    int getMaxDamage();
+    float getMaxDamage();
 
-    int getMaxDamage(Integer difficulty);
+    float getMaxDamage(Integer difficulty);
 
-    void setDamage(int damage);
+    void setDamage(float damage);
 
-    void setDamage(int[] damage);
+    void setDamage(float[] damage);
 
-    void setDamage(int damage, int difficulty);
+    void setDamage(float damage, int difficulty);
 
-    void setMinDamage(int damage);
+    void setMinDamage(float damage);
 
-    void setMinDamage(int[] damage);
+    void setMinDamage(float[] damage);
 
-    void setMinDamage(int damage, int difficulty);
+    void setMinDamage(float damage, int difficulty);
 
-    void setMaxDamage(int damage);
+    void setMaxDamage(float damage);
 
-    void setMaxDamage(int[] damage);
+    void setMaxDamage(float[] damage);
 
-    void setMaxDamage(int damage, int difficulty);
+    void setMaxDamage(float damage, int difficulty);
 
 }

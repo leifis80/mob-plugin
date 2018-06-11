@@ -1,22 +1,20 @@
-package de.kniffo80.mobplugin.entities.monster.swimming;
+package de.kniffo80.mobplugin.entities.animal.swimming;
 
-import cn.nukkit.entity.Entity;
+import de.kniffo80.mobplugin.utils.Utils;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
-import de.kniffo80.mobplugin.entities.monster.SwimmingMonster;
-import de.kniffo80.mobplugin.utils.Utils;
-
+import de.kniffo80.mobplugin.entities.animal.SwimmingAnimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ElderGuardian extends SwimmingMonster {
+public class Dolphin extends SwimmingAnimal {
 
-    public static final int NETWORK_ID = 50;
+    public static final int NETWORK_ID = 31;
 
-    public ElderGuardian(FullChunk chunk, CompoundTag nbt) {
+    public Dolphin(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
     }
 
@@ -26,20 +24,20 @@ public class ElderGuardian extends SwimmingMonster {
     }
 
     @Override
+    public void initEntity() {
+        super.initEntity();
+
+        this.setMaxHealth(10);
+    }
+
+    @Override
     public float getWidth() {
-        return 1.9975f;
+        return 0.9f;
     }
 
     @Override
     public float getHeight() {
-        return 1.9975f;
-    }
-
-    @Override
-    public void initEntity() {
-        super.initEntity();
-
-        this.setMaxHealth(80);
+        return 0.6f;
     }
 
     @Override
@@ -48,17 +46,12 @@ public class ElderGuardian extends SwimmingMonster {
     }
 
     @Override
-    public void attackEntity(Entity player) {
-    //TODO
-    }
-
-    @Override
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
         if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
-            int prismarineShard = Utils.rand(0, 3); // drops 0-2 prismarine shard
-            for (int i=0; i < prismarineShard; i++) {
-                drops.add(Item.get(Item.PRISMARINE_SHARD, 0, 1));
+            int fish = Utils.rand(0, 2);
+            for (int i = 0; i < fish; i++) {
+                drops.add(Item.get(Item.RAW_FISH, 0, 1));
             }
         }
         return drops.toArray(new Item[drops.size()]);
@@ -66,7 +59,6 @@ public class ElderGuardian extends SwimmingMonster {
 
     @Override
     public int getKillExperience() {
-        return 10;
+        return 0;
     }
-
 }

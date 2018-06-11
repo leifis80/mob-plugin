@@ -46,7 +46,7 @@ public class CaveSpider extends Spider {
         super.initEntity();
 
         this.setMaxHealth(12);
-        this.setDamage(new int[] { 0, 2, 3, 3 });
+        this.setDamage(new float[] { 0, 2, 3, 3 });
     }
 
     @Override
@@ -54,7 +54,7 @@ public class CaveSpider extends Spider {
         if (this.attackDelay > 10 && this.distanceSquared(player) < 1.32) {
             this.attackDelay = 0;
             HashMap<EntityDamageEvent.DamageModifier, Float> damage = new HashMap<>();
-            damage.put(EntityDamageEvent.DamageModifier.BASE, (float) this.getDamage());
+            damage.put(EntityDamageEvent.DamageModifier.BASE, this.getDamage());
 
             if (player instanceof Player) {
                 @SuppressWarnings("serial")

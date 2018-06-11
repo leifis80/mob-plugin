@@ -33,8 +33,6 @@ public class HorseSpawner extends AbstractEntitySpawner {
 
         if (!Block.solid[blockId]) { // only spawns on solid blocks
             result = SpawnResult.WRONG_BLOCK;
-        } else if (blockLightLevel > 9) {
-            result = SpawnResult.WRONG_LIGHTLEVEL;
         } else if (pos.y > 127 || pos.y < 1 || level.getBlockIdAt((int) pos.x, (int) pos.y, (int) pos.z) == Block.AIR) { // cannot spawn on AIR block
             result = SpawnResult.POSITION_MISMATCH;
         } else { // horse is spawned

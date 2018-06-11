@@ -54,7 +54,7 @@ public class Husk extends WalkingMonster implements EntityAgeable {
     @Override
     protected void initEntity() {
         super.initEntity();
-        this.setDamage(new int[]{0, 3, 4, 6});
+        this.setDamage(new float[]{0, 3, 4, 6});
         setMaxHealth(20);
     }
 
@@ -68,13 +68,13 @@ public class Husk extends WalkingMonster implements EntityAgeable {
 
         if (this.isAlive()) {
             if (15 < this.getHealth()) {
-                this.setDamage(new int[]{0, 2, 3, 4});
+                this.setDamage(new float[]{0, 2, 3, 4});
             } else if (10 < this.getHealth()) {
-                this.setDamage(new int[]{0, 3, 4, 6});
+                this.setDamage(new float[]{0, 3, 4, 6});
             } else if (5 < this.getHealth()) {
-                this.setDamage(new int[]{0, 3, 5, 7});
+                this.setDamage(new float[]{0, 3, 5, 7});
             } else {
-                this.setDamage(new int[]{0, 4, 6, 9});
+                this.setDamage(new float[]{0, 4, 6, 9});
             }
         }
     }

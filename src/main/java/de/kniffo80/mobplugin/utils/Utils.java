@@ -8,6 +8,7 @@ package de.kniffo80.mobplugin.utils;
 import cn.nukkit.math.Vector3;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author <a href="mailto:kniffman@googlemail.com">Michael Gertz (kniffo80)</a>
@@ -28,13 +29,20 @@ public class Utils {
         if (min == max) {
             return max;
         }
-        return min + random.nextInt(max - min);
+        return ThreadLocalRandom.current().nextInt(min,max);
     }
     public static double rand(double min, double max){
         if(min == max){
             return max;
         }
-        return min + Math.random() * (max-min);
+        return ThreadLocalRandom.current().nextDouble(min,max);
+    }
+
+    public static float rand(float min, float max){
+        if(min == max){
+            return max;
+        }
+        return min + (ThreadLocalRandom.current().nextFloat() * (max));
     }
 
     /**

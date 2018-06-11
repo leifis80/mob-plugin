@@ -68,7 +68,7 @@ public class Wolf extends TameableMonster {
         }
 
         this.setMaxHealth(8);
-        this.setDamage(new int[] { 0, 3, 4, 6 });
+        this.setDamage(new float[] { 0, 3, 4, 6 });
     }
 
     @Override
@@ -136,7 +136,7 @@ public class Wolf extends TameableMonster {
             if (this.attackDelay > 10 && this.distanceSquared(player) < 1.6) {
                 this.attackDelay = 0;
                 HashMap<EntityDamageEvent.DamageModifier, Float> damage = new HashMap<>();
-                damage.put(EntityDamageEvent.DamageModifier.BASE, (float) this.getDamage());
+                damage.put(EntityDamageEvent.DamageModifier.BASE, this.getDamage());
 
                 if (player instanceof Player) {
                     @SuppressWarnings("serial")
