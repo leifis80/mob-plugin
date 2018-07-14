@@ -29,7 +29,7 @@ public abstract class RouteFinder {
 
     private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
-    protected boolean reachable = true;//TODO 埋葬深度
+    protected boolean reachable = true;//TODO burial depth
 
     //public boolean arrived = false;
 

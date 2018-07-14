@@ -2,6 +2,7 @@ package de.kniffo80.mobplugin.entities.animal;
 
 import cn.nukkit.Player;
 import cn.nukkit.entity.data.ShortEntityData;
+import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
@@ -27,7 +28,7 @@ public abstract class SwimmingAnimal extends SwimmingEntity implements Animal {
 
     @Override
     public boolean entityBaseTick(int tickDiff) {
-        boolean hasUpdate = false;
+        boolean hasUpdate;
         Timings.entityBaseTickTimer.startTiming();
 
         hasUpdate = super.entityBaseTick(tickDiff);
@@ -73,4 +74,6 @@ public abstract class SwimmingAnimal extends SwimmingEntity implements Animal {
     public boolean isBaby() {
         return false;
     }
+
+
 }

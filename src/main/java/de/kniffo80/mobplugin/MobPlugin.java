@@ -54,6 +54,8 @@ import java.util.List;
  */
 public class MobPlugin extends PluginBase implements Listener {
 
+    private int configVersion = 2; //change this when you add/remove something from config
+
     public static boolean MOB_AI_ENABLED = true;
 
     private Config pluginConfig = null;
@@ -76,6 +78,8 @@ public class MobPlugin extends PluginBase implements Listener {
         this.saveDefaultConfig();
 
         pluginConfig = getConfig();
+
+        if (getConfig().getInt("config-version") != configVersion) this.getServer().getLogger().warning("MobPlugin's config file is outdated. Delete old config and reload server to update it.");
 
         // we need this flag as it's controlled by the plugin's entities
         int spawnDelay = pluginConfig.getInt("entities.auto-spawn-tick", 0);

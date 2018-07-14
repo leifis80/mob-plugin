@@ -24,6 +24,8 @@ import java.util.List;
 public class Spider extends WalkingMonster {
 
     public static final int NETWORK_ID = 35;
+    
+    private boolean angry = false;
 
     public Spider(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
@@ -197,7 +199,7 @@ public class Spider extends WalkingMonster {
     public void attackEntity(Entity player) {
         int time = player.getLevel().getTime() % Level.TIME_FULL;
         if (!this.isFriendly() || !(player instanceof Player)) {
-            if (time > 13184 && time < 22800) { //TODO: better fix
+            if ((time > 13184 && time < 22800) || angry) {
             this.attackDelay = 0;
             HashMap<EntityDamageEvent.DamageModifier, Float> damage = new HashMap<>();
             damage.put(EntityDamageEvent.DamageModifier.BASE, this.getDamage());
@@ -241,6 +243,16 @@ public class Spider extends WalkingMonster {
             }
         }
     }
+    
+    @Override
+    public boolean attack(EntityDamageEvent ev) {
+        super.attack(ev);
+
+        if (!ev.isCancelled()) {
+            this.angry = true;
+        }
+        return true;
+    }
 
     @Override
     public Item[] getDrops() {
@@ -248,10 +260,10 @@ public class Spider extends WalkingMonster {
         if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
             int strings = Utils.rand(0, 3); // drops 0-2 strings
             int spiderEye = Utils.rand(0, 3) == 0 ? 1 : 0; // with a 1/3 chance it drops a spider eye
-            for (int i=0; i < strings; i++) {
+            for (int i = 0; i < strings; i++) {
                 drops.add(Item.get(Item.STRING, 0, 1));
             }
-            for (int i=0; i < spiderEye; i++) {
+            for (int i = 0; i < spiderEye; i++) {
                 drops.add(Item.get(Item.SPIDER_EYE, 0, 1));
             }
         }
@@ -259,7 +271,7 @@ public class Spider extends WalkingMonster {
     }
 
     @Override
-    public int getKillExperience () {
+    public int getKillExperience() {
         return 5; // gain 5 experience
     }
 

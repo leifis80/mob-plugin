@@ -338,8 +338,8 @@ public class WalkerRouteFinder extends SimpleRouteFinder {
     private boolean hasBarrier(Vector3 pos1, Vector3 pos2) {
         if (pos1.equals(pos2)) return false;
         if (pos1.getFloorY() != pos2.getFloorY()) return true;
-        boolean traverseDirection = Math.abs(pos1.getX() - pos2.getX()) > Math.abs(pos1.getZ() - pos2.getZ());//true为横向遍历 false为纵向遍历
-        if (traverseDirection) {//横向遍历
+        boolean traverseDirection = Math.abs(pos1.getX() - pos2.getX()) > Math.abs(pos1.getZ() - pos2.getZ());//true gorizontal traversal, false vertical traversal
+        if (traverseDirection) {//horizontal traversal
             double loopStart = Math.min(pos1.getX(), pos2.getX());
             double loopEnd = Math.max(pos1.getX(), pos2.getX());
             ArrayList<Vector3> list = new ArrayList<>();
@@ -349,7 +349,7 @@ public class WalkerRouteFinder extends SimpleRouteFinder {
                     list.add(new Vector3(i, pos1.getY(), result));
             }
             return hasBlocksAround(list);
-        } else {//纵向遍历
+        } else {//Horizontal traversal
             double loopStart = Math.min(pos1.getZ(), pos2.getZ());
             double loopEnd = Math.max(pos1.getZ(), pos2.getZ());
             ArrayList<Vector3> list = new ArrayList<>();
@@ -393,10 +393,10 @@ public class WalkerRouteFinder extends SimpleRouteFinder {
     }
 
     /**
-     * 弗洛伊德路径平滑
+     * freud path smoothing
      *
-     * @param array 路径
-     * @return 平滑后的路径
+     * @param array path
+     * @return smoothed path
      */
     private ArrayList<Node> FloydSmooth(ArrayList<Node> array) {
         int current = 0;

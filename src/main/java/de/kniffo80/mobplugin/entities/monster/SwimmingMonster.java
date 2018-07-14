@@ -13,13 +13,13 @@ import de.kniffo80.mobplugin.utils.Utils;
 
 public abstract class SwimmingMonster extends SwimmingEntity implements Monster {
 
-    private float[]   minDamage;
+    protected float[]   minDamage;
 
-    private float[]   maxDamage;
+    protected float[]   maxDamage;
 
     protected int   attackDelay = 0;
 
-    private boolean canAttack   = true;
+    protected boolean canAttack   = true;
 
     public SwimmingMonster(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);

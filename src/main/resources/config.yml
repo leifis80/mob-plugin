@@ -1,6 +1,10 @@
+config-version: 2
+
 entities:
   auto-spawn-tick: 200
   worlds-spawn-disabled: "exampleworld1,exampleworld2"
+  despawn-entities: true
+  despawn-ticks: 12000
 
 max-spawns:
   bat: 0
