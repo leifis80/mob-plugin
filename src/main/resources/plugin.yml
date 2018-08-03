@@ -1,12 +1,11 @@
 name: MobPlugin
-main: de.kniffo80.mobplugin.MobPlugin
-version: "1.0"
+main: nukkitcoders.mobplugin.MobPlugin
+version: "1.1"
 api: ["1.0.6"]
 
-load: STARTUP
 author: kniffo80, matt404, augesrob, PetteriM1, PikyCZ, zzz1999
-description: Mob plugin for NukkitX
-website: https://github.com/Nukkit-coders/MobPlugin
+description: Entity AI & autospawn plugin for NukkitX servers
+website: https://nukkitx.com/resources/mobplugin.3/
 
 commands:
  mob:
