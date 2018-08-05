@@ -71,43 +71,41 @@ public class Witch extends WalkingMonster {
 
     @Override
     public void attackEntity(Entity player) {
-        if (MobPlugin.MOB_AI_ENABLED) {
-            if (this.attackDelay > ATTACK_TICKS && this.distanceSquared(player) <= 8) { // they attack only beginning from 8 blocks away ...
-                this.attackDelay = 0;
-                if (player.isAlive() && !player.closed) {
+        if (this.attackDelay > ATTACK_TICKS && this.distanceSquared(player) <= 8) { // they attack only beginning from 8 blocks away ...
+            this.attackDelay = 0;
+            if (player.isAlive() && !player.closed) {
 
-                    double f = 2;
-                    double yaw = this.yaw + Utils.rand(-220, 220) / 10;
-                    double pitch = this.pitch + Utils.rand(-120, 120) / 10;
-                    Location pos = new Location(this.x - Math.sin(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)) * 0.5, this.y + this.getEyeHeight(),
-                            this.z + Math.cos(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)) * 0.5, yaw, pitch, this.level);
+                double f = 2;
+                double yaw = this.yaw + Utils.rand(-220, 220) / 10;
+                double pitch = this.pitch + Utils.rand(-120, 120) / 10;
+                Location pos = new Location(this.x - Math.sin(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)) * 0.5, this.y + this.getEyeHeight(),
+                        this.z + Math.cos(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)) * 0.5, yaw, pitch, this.level);
 
-                    EntityPotion thrownPotion = (EntityPotion) MobPlugin.create("ThrownPotion", pos, this);
+                EntityPotion thrownPotion = (EntityPotion) MobPlugin.create("ThrownPotion", pos, this);
 
-                    if (this.distance(player) <= 8 && !player.hasEffect(Effect.SLOWNESS)) {
-                        thrownPotion.potionId = Potion.SLOWNESS;
-                    } else if (player.getHealth() >= 8) {
-                        thrownPotion.potionId = Potion.POISON;
-                    } else if (this.distance(player) <= 3 && !player.hasEffect(Effect.WEAKNESS) && Utils.rand(0, 4) == 0) {
-                        thrownPotion.potionId = Potion.WEAKNESS;
-                    } else {
-                        thrownPotion.potionId = Potion.HARMING;
-                    }
-
-                    thrownPotion.setMotion(new Vector3(-Math.sin(Math.toDegrees(yaw)) * Math.cos(Math.toDegrees(pitch)) * f * f, -Math.sin(Math.toDegrees(pitch)) * f * f,
-                            Math.cos(Math.toDegrees(yaw)) * Math.cos(Math.toDegrees(pitch)) * f * f));
-                    ProjectileLaunchEvent launch = new ProjectileLaunchEvent(thrownPotion);
-                    this.server.getPluginManager().callEvent(launch);
-                    if (launch.isCancelled()) {
-                        thrownPotion.kill();
-                    } else {
-                        thrownPotion.spawnToAll();
-                        this.level.addSound(this, Sound.MOB_WITCH_THROW);
-                    }
+                if (this.distance(player) <= 8 && !player.hasEffect(Effect.SLOWNESS)) {
+                    thrownPotion.potionId = Potion.SLOWNESS;
+                } else if (player.getHealth() >= 8) {
+                    thrownPotion.potionId = Potion.POISON;
+                } else if (this.distance(player) <= 3 && !player.hasEffect(Effect.WEAKNESS) && Utils.rand(0, 4) == 0) {
+                    thrownPotion.potionId = Potion.WEAKNESS;
+                } else {
+                    thrownPotion.potionId = Potion.HARMING;
                 }
-            } else {
-                this.attackDelay++;
+
+                thrownPotion.setMotion(new Vector3(-Math.sin(Math.toDegrees(yaw)) * Math.cos(Math.toDegrees(pitch)) * f * f, -Math.sin(Math.toDegrees(pitch)) * f * f,
+                        Math.cos(Math.toDegrees(yaw)) * Math.cos(Math.toDegrees(pitch)) * f * f));
+                ProjectileLaunchEvent launch = new ProjectileLaunchEvent(thrownPotion);
+                this.server.getPluginManager().callEvent(launch);
+                if (launch.isCancelled()) {
+                    thrownPotion.kill();
+                } else {
+                    thrownPotion.spawnToAll();
+                    this.level.addSound(this, Sound.MOB_WITCH_THROW);
+                }
             }
+        } else {
+            this.attackDelay++;
         }
     }
 

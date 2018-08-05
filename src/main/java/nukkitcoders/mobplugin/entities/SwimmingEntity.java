@@ -96,7 +96,7 @@ public abstract class SwimmingEntity extends BaseEntity {
     }
 
     public Vector3 updateMove(int tickDiff) {
-        if (MobPlugin.MOB_AI_ENABLED && !isImmobile()) {
+        if (!isImmobile()) {
             if (!this.isMovement()) {
                 return null;
             }

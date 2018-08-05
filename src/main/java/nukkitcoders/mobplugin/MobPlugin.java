@@ -55,8 +55,6 @@ public class MobPlugin extends PluginBase implements Listener {
 
     private int configVersion = 2; // change this when big changes in config
 
-    public static boolean MOB_AI_ENABLED = true;
-
     private Config pluginConfig = null;
 
     public static MobPlugin instance;
