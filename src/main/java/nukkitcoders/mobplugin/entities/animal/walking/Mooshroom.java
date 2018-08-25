@@ -5,7 +5,9 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.item.Item;
+import cn.nukkit.level.Sound;
 import cn.nukkit.level.format.FullChunk;
+import cn.nukkit.level.particle.ItemBreakParticle;
 import cn.nukkit.nbt.tag.CompoundTag;
 import nukkitcoders.mobplugin.entities.animal.WalkingAnimal;
 import nukkitcoders.mobplugin.utils.Utils;
@@ -80,5 +82,23 @@ public class Mooshroom extends WalkingAnimal {
     public int getKillExperience() {
         return Utils.rand(1, 4); // gain 1-3 experience
     }
-
+    
+    @Override
+    public boolean onInteract(Player player, Item item) {
+        if (item.equals(Item.get(Item.BOWL, 0), true)) {
+            player.getInventory().removeItem(Item.get(Item.BOWL, 0, 1));
+            player.getInventory().addItem(Item.get(Item.MUSHROOM_STEW, 0, 1));
+            return true;
+        } else if (item.equals(Item.get(Item.BUCKET, 0), true)) {
+            player.getInventory().removeItem(Item.get(Item.BUCKET, 0, 1));
+            player.getInventory().addItem(Item.get(Item.BUCKET, 1, 1));
+            this.level.addSound(this, Sound.MOB_COW_MILK);
+            return true;
+        } else if (item.equals(Item.get(Item.WHEAT, 0)) && !this.isBaby()) {
+            player.getInventory().removeItem(Item.get(Item.WHEAT, 0, 1));
+            this.level.addParticle(new ItemBreakParticle(this.add(0, this.getMountedYOffset(), 0), Item.get(Item.WHEAT)));
+            this.setInLove();
+        }
+        return false;
+    }
 }

@@ -59,6 +59,7 @@ public class Blaze extends FlyingMonster {
         super.initEntity();
 
         this.fireProof = true;
+        this.setMaxHealth(20);
         this.setDamage(new float[]{0, 0, 0, 0});
     }
 

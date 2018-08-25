@@ -28,7 +28,6 @@ public class CowSpawner extends AbstractEntitySpawner {
         SpawnResult result = SpawnResult.OK;
 
         int blockId = level.getBlockIdAt((int) pos.x, (int) pos.y, (int) pos.z);
-        int blockLightLevel = level.getBlockLightAt((int) pos.x, (int) pos.y, (int) pos.z);
 
         if (Block.transparent[blockId]) { // only spawns on opaque blocks
             result = SpawnResult.WRONG_BLOCK;

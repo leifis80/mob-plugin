@@ -9,7 +9,7 @@ import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.EntityEventPacket;
-
+import cn.nukkit.potion.Effect;
 import nukkitcoders.mobplugin.entities.monster.WalkingMonster;
 import nukkitcoders.mobplugin.route.WalkerRouteFinder;
 import nukkitcoders.mobplugin.utils.Utils;
@@ -88,6 +88,10 @@ public class Husk extends WalkingMonster implements EntityAgeable {
             pk.eid = this.getId();
             pk.event = 4;
             Server.broadcastPacket(this.getViewers().values(), pk);
+            Effect hunger = Effect.getEffectByName("HUNGER");
+            hunger.setAmplifier(1);
+            hunger.setDuration(140);
+            player.addEffect(hunger);
         }
     }
 

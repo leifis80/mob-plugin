@@ -28,10 +28,12 @@ public class HorseSpawner extends AbstractEntitySpawner {
     public SpawnResult spawn(IPlayer iPlayer, Position pos, Level level) {
         SpawnResult result = SpawnResult.OK;
 
+        int biomeId = level.getBiomeId((int) pos.x, (int) pos.z);
         int blockId = level.getBlockIdAt((int) pos.x, (int) pos.y, (int) pos.z);
-        int blockLightLevel = level.getBlockLightAt((int) pos.x, (int) pos.y, (int) pos.z);
 
-        if (!Block.solid[blockId]) { // only spawns on solid blocks
+        if (biomeId != 1 && biomeId != 35 && biomeId != 128 && biomeId != 129) {
+            result = SpawnResult.WRONG_BLOCK;
+        } else if (!Block.solid[blockId]) { // only spawns on solid blocks
             result = SpawnResult.WRONG_BLOCK;
         } else if (pos.y > 127 || pos.y < 1 || level.getBlockIdAt((int) pos.x, (int) pos.y, (int) pos.z) == Block.AIR) { // cannot spawn on AIR block
             result = SpawnResult.POSITION_MISMATCH;
